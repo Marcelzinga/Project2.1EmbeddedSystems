@@ -16,14 +16,6 @@
 uint8_t get_adc_value();
 void init_adc();
 
-
-//ISR(ADC_vect){
-//	//ser_write(ADC);
-//	//ser_write(get_adc_value());
-//}
-
-
-
 int main()
 {
 	ser_init();
@@ -31,26 +23,13 @@ int main()
 	//DDRC = 0xDF; // PIN5 as Input
 	//DDRB = 0xFF;
 	
-	DDRC &= ~(1<<5); // set only pin 5 of port C as input
-	// set pin 4 of PORTB for Output
-	DDRB = _BV(DDB4);
+	DDRC &= ~(1<<5); // set only pin 0 of port C as input
+	DDRB = _BV(DDB4); // set pin 4 of PORTB for Output
 	
 	
 	while(1)
 	{
-		uint8_t inten = get_adc_value();
-		uint8_t x = PINC & (1<<5);
-		
-		if(inten > 100){
-			PORTB |= _BV(PORTB4);
-		}
-		else{
-			PORTB &= ~_BV(PORTB4);
-		}
-		//ser_writeln(get_adc_value());
-		printf("intensiteit=%inten \n", inten);
-		
-		
+		printf("intensiteit=%i \n", get_adc_value());
 		_delay_ms(200);
 	}
 	
