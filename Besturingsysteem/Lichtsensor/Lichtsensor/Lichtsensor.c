@@ -16,12 +16,11 @@
 uint8_t get_adc_value();
 void init_adc();
 
-#define DELAY_MS 400
 
-ISR(ADC_vect){
-	ser_write(ADC);
-	ser_write(get_adc_value());
-}
+//ISR(ADC_vect){
+//	//ser_write(ADC);
+//	//ser_write(get_adc_value());
+//}
 
 
 
@@ -39,17 +38,20 @@ int main()
 	
 	while(1)
 	{
-		uint8_t temp = get_adc_value();
+		uint8_t inten = get_adc_value();
 		uint8_t x = PINC & (1<<5);
 		
-		if(temp > 100){
+		if(inten > 100){
 			PORTB |= _BV(PORTB4);
 		}
 		else{
 			PORTB &= ~_BV(PORTB4);
-			ser_writeln(temp);
 		}
-		_delay_ms(DELAY_MS);
+		//ser_writeln(get_adc_value());
+		printf("intensiteit=%inten \n", inten);
+		
+		
+		_delay_ms(200);
 	}
 	
 	
