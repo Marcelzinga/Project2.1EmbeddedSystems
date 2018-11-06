@@ -16,15 +16,27 @@
 uint8_t get_adc_value();
 void init_adc();
 void int_timer();
-// elke seconde gebeurd de functie
 
 volatile uint8_t i = 0;
+int extraTime = 0;
 
-ISR (TIMER1_OVF_vect){
+/* 
+Work in progress.
 
-	//printf("%i intensiteit=%d\n", i, getLight());
-	//i++;
-	//TCNT1 = 468750;
+Op het moment werkt deze timerinterrupt niet correct. 
+Hij doet er ~4 keer te lang over.(of ~8 keer tekort
+*/
+ISR (TIMER1_COMPA_vect){
+	extraTime++;
+	if(extraTime==8){
+	printf("%i intensiteit=%d\n", i, get_adc_value());
+	i++;
+	
+	// Resets de timer en de Totale timer ticks
+	extraTime = 0;
+	OCR1A = 468750;
+	//TCNT1 = 468750; // Dit was bij het testen van 8bitclock
+	}		
 }
 
 int main()
@@ -41,17 +53,26 @@ int main()
 	//DDRB = _BV(DDB4); // set pin 4 of PORTB for Output
 
 	
-	int i = 0;
+	int a = 0;
+	_delay_ms(1000);
+	printf("An interrupt should be occuring every 30 seconds\n");
 	while(1)
 	{
-		printf("%i intensiteit=%d \n", i, getLight());
-		i++;
-		_delay_ms(50000);
+		// Dit is alleen voor het testen. Het moet via interrupt
+		//printf("main %i intensiteit=%d \n", a, getLight());
+		//a++;
+		//_delay_ms(10000);
 	}
 	
 	
 }
 
+
+
+/*
+	Dit werdt gebruikt om de lichtintensiteit aan te roepen.
+	Het werkte niet optimaal dus is het niet in gebruik
+*/
 void getLight(){
 	uint8_t temp = get_adc_value();
 	return temp;
@@ -77,12 +98,26 @@ uint8_t get_adc_value()
 }
 
 void init_timer (void){
-	//prescale op 1024
+	
+	TCCR0A = (1<< WGM12); // set CTC Bit
+	OCR1A = 468750;
+	TIMSK1 = (1<< OCIE1A);
+	
+	
+	sei(); // set external interrupt
+	
+	TCCR1B |= (1 << CS12) | (1 <<CS10); // start at 1024 prescaler
+		
+}
+
+
+// Gefaalde code die ik nu even bewaar
+	/*//prescale op 1024
 	TCCR1B = 0x05;
-	sei();
+	
 
 	TCNT1 = 468750; 
-	TIMSK1 |= (1 << TOIE1);
+	TIMSK1 |= (1 << TOIE1);*/
+	
 	//TIMSK1 = 1 << OCIE1A; // Timer 1 Output Compare A Match Interrupt Enable
 	//OCR1A = (uint16_t)62500; // 1 sec = (256/16.000.000)*62499
-}
