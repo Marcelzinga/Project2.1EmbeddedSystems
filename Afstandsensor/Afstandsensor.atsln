@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Afstandsensor", "Afstandsensor\Afstandsensor.cproj", "{ABC08041-C8DD-4A0D-8FA2-C3A7ACA2E589}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABC08041-C8DD-4A0D-8FA2-C3A7ACA2E589}.Debug|AVR.ActiveCfg = Debug|AVR
+		{ABC08041-C8DD-4A0D-8FA2-C3A7ACA2E589}.Debug|AVR.Build.0 = Debug|AVR
+		{ABC08041-C8DD-4A0D-8FA2-C3A7ACA2E589}.Release|AVR.ActiveCfg = Release|AVR
+		{ABC08041-C8DD-4A0D-8FA2-C3A7ACA2E589}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
