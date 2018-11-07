@@ -16,9 +16,10 @@
 uint8_t get_adc_value();
 void init_adc();
 void int_timer();
+uint8_t getLight();
 
 volatile uint8_t i = 0;
-int extraTime = 0;
+volatile int extraTime = 0;
 
 
 int main()
@@ -26,9 +27,7 @@ int main()
 	init_timer();
 	ser_init();
 	ADC_init();
-	sei();
-	
-	//sei(); // set external interrupt
+	sei(); // set external interrupt
 	
 
 	//int a = 0;
@@ -50,7 +49,7 @@ int main()
 	Dit werdt gebruikt om de lichtintensiteit aan te roepen.
 	Het werkte niet optimaal dus is het niet in gebruik
 */
-void getLight(){
+uint8_t getLight(){
 	uint8_t temp = get_adc_value();
 	return temp;
 }
@@ -60,10 +59,11 @@ void ADC_init()
 {
 	//ref = vcc, left adjust the result (8 bit resolution)
 	// select channel 0 (PC0 = input)
-	ADMUX |= (1<<REFS0) | (1<<ADLAR);
+	ADMUX = (1 << REFS0) | (1 << MUX1)| (1<<ADLAR); // port A2
+	//ADMUX |= (1<<REFS0)| (1<<ADLAR);
 	// enable the ADC & prescale = 128
 	ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
-
+	DIDR0 = (1<<ADC5D); //!!Disables pin 5? not sure what it does atm
 	
 }
 
@@ -77,7 +77,7 @@ uint8_t get_adc_value()
 void init_timer (void){
 	//8bittimer
 	TCCR0A = (1<< WGM01); // set CTC Bit
-	OCR0A = 156;
+	OCR0A = 156; // Dit geeft 1/10 miliseconde
 	TIMSK0 = (1<< OCIE0A);
 	
 	
@@ -89,15 +89,15 @@ void init_timer (void){
 /*
 Work in progress.
 
-Timerinterrupt geeft om de 30 seconden een interrupt
+Timerinterrupt geeft om de 30/(of2) seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
 	
-	if(extraTime>3000){
-		printf("%i intensiteit=%d\n", i, get_adc_value());
+	if(extraTime>200){
+		printf("%i intensiteit=%d\n", i, getLight());
 		i++;
 		
 		// Resets de timer en de Totale timer ticks
