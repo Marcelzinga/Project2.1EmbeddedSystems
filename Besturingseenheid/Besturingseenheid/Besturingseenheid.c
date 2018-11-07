@@ -24,7 +24,7 @@ int main()
 	ADC_init();
 	sei(); // set external interrupt
 	  
-	printf("An interrupt should be occuring every 1 seconds\n");
+	printf("An interrupt should be occuring every 5 seconds\n");
 	//DDRC &= ~(1<<5); // set only pin 0 of port C as input
 	while(1){
 		 
@@ -64,12 +64,13 @@ ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
 	
-	if(extraTime>100){
-		Volt = getTemp() * 0.0048828125;
+	if(extraTime>500){
+		Volt = get_temp_adc() * 0.0048828125;
 		ADCRes = (Volt - 0.5) * 100;
 		itoa(ADCRes, ADCOut, 10);
 		ser_write("Temperatuur: "); ser_writeln(ADCOut);
 		printf("%i Temperatuur=%f \n", i, ADCOut);
+		_delay_ms(100);
 		printf("%i intensiteit=%d\n", i, getLight());
 		i++;
 		
@@ -81,5 +82,5 @@ ISR(TIMER0_COMPA_vect){
 /*
 	De valus van de temperatuursensor worden niet correct aangegeven.
 	De lichtsensor geeft nog wel de waardes die overeenkomen met de 
-	oorspronkelijke code.
+	
 */
