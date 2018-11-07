@@ -25,7 +25,7 @@ int main()
 	sei(); // set external interrupt
 	  
 	printf("An interrupt should be occuring every 5 seconds\n");
-	//DDRC &= ~(1<<5); // set only pin 0 of port C as input
+	
 	while(1){
 		 
 	 }
@@ -33,15 +33,20 @@ int main()
 	
 }
 
+/*
+	De get temp en get light gaan nu naar twee aparte ADC getters
+	omdat wanneer ik een if else statement gebruikte het niet de 
+	gewenste resultaten toonde.
+*/
 uint8_t getTemp(){
 	//uint8_t temp = ADCOut;
-	//uint8_t temp = get_adc_value(PC1);
+	//uint8_t temp = get_adc_value(PC2);
 	uint8_t temp = get_temp_adc();
 	return temp;
 }
 
 uint8_t getLight(){
-	//uint8_t temp = get_adc_value(PC0);
+	//uint8_t temp = get_adc_value(PC5);
 	uint8_t temp = get_licht_adc();
 	return temp;
 }
@@ -78,9 +83,3 @@ ISR(TIMER0_COMPA_vect){
 		extraTime = 0;
 	}
 }
-
-/*
-	De valus van de temperatuursensor worden niet correct aangegeven.
-	De lichtsensor geeft nog wel de waardes die overeenkomen met de 
-	
-*/
