@@ -9,5 +9,4 @@ void init_ext_int(void);
 void ser_write(char* s);
 void ser_writeln(char* s);
 void ser_readln(char* buf, int maxlength, uint8_t echo);
-int calc_cm(int counter);
 
