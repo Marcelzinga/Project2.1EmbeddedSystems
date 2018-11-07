@@ -20,41 +20,18 @@ void int_timer();
 volatile uint8_t i = 0;
 int extraTime = 0;
 
-/* 
-Work in progress.
-
-Op het moment werkt deze timerinterrupt niet correct. 
-Hij doet er ~4 keer te lang over.(of ~8 keer tekort
-*/
-ISR (TIMER1_COMPA_vect){
-	extraTime++;
-	if(extraTime==8){
-	printf("%i intensiteit=%d\n", i, get_adc_value());
-	i++;
-	
-	// Resets de timer en de Totale timer ticks
-	extraTime = 0;
-	OCR1A = 468750;
-	//TCNT1 = 468750; // Dit was bij het testen van 8bitclock
-	}		
-}
 
 int main()
 {
 	init_timer();
 	ser_init();
 	ADC_init();
+	sei();
 	
+	//sei(); // set external interrupt
 	
-	//DDRC = 0xDF; // PIN5 as Input
-	//DDRB = 0xFF;
-	
-	//DDRC &= ~(1<<5); // set only pin 0 of port C as input
-	//DDRB = _BV(DDB4); // set pin 4 of PORTB for Output
 
-	
-	int a = 0;
-	_delay_ms(1000);
+	//int a = 0;
 	printf("An interrupt should be occuring every 30 seconds\n");
 	while(1)
 	{
@@ -86,7 +63,7 @@ void ADC_init()
 	ADMUX |= (1<<REFS0) | (1<<ADLAR);
 	// enable the ADC & prescale = 128
 	ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
-	sei();
+
 	
 }
 
@@ -98,16 +75,38 @@ uint8_t get_adc_value()
 }
 
 void init_timer (void){
+	//8bittimer
+	TCCR0A = (1<< WGM01); // set CTC Bit
+	OCR0A = 156;
+	TIMSK0 = (1<< OCIE0A);
 	
-	TCCR0A = (1<< WGM12); // set CTC Bit
-	OCR1A = 468750;
-	TIMSK1 = (1<< OCIE1A);
 	
-	
-	sei(); // set external interrupt
-	
-	TCCR1B |= (1 << CS12) | (1 <<CS10); // start at 1024 prescaler
+	TCCR0B |= (1 << CS02) | (1 <<CS00); // start at 1024 prescaler
 		
+}
+
+
+/*
+Work in progress.
+
+Timerinterrupt geeft om de 30 seconden een interrupt
+https://eleccelerator.com/avr-timer-calculator/
+*/
+ISR(TIMER0_COMPA_vect){
+	
+	extraTime++;
+	
+	if(extraTime>3000){
+		printf("%i intensiteit=%d\n", i, get_adc_value());
+		i++;
+		
+		// Resets de timer en de Totale timer ticks
+		extraTime = 0;
+		
+		
+		//OCR1A = 468750;
+		//TCNT1 = 468750; // Dit was bij het testen van 8bitclock
+	}
 }
 
 
