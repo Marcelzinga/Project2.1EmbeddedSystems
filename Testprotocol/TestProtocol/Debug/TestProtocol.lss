@@ -1,0 +1,920 @@
+
+TestProtocol.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         000001fa  00800100  0000051a  000005ae  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         0000051a  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000024  008002fa  008002fa  000007a8  2**0
+                  ALLOC
+  3 .stab         00000798  00000000  00000000  000007a8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00000148  00000000  00000000  00000f40  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_aranges 000000e0  00000000  00000000  00001088  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000009c6  00000000  00000000  00001168  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000002ee  00000000  00000000  00001b2e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000625  00000000  00000000  00001e1c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000168  00000000  00000000  00002444  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000001a2  00000000  00000000  000025ac  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000410  00000000  00000000  0000274e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 2a 02 	jmp	0x454	; 0x454 <__vector_1>
+   8:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+   c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  10:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  14:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  18:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  1c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  20:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  24:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  28:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  2c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  30:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  34:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  38:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  3c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  40:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  44:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  48:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  4c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  50:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  54:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  58:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  5c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  60:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  64:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_copy_data>:
+  74:	12 e0       	ldi	r17, 0x02	; 2
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	ea e1       	ldi	r30, 0x1A	; 26
+  7c:	f5 e0       	ldi	r31, 0x05	; 5
+  7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
+  80:	05 90       	lpm	r0, Z+
+  82:	0d 92       	st	X+, r0
+  84:	aa 3f       	cpi	r26, 0xFA	; 250
+  86:	b1 07       	cpc	r27, r17
+  88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
+
+0000008a <__do_clear_bss>:
+  8a:	13 e0       	ldi	r17, 0x03	; 3
+  8c:	aa ef       	ldi	r26, 0xFA	; 250
+  8e:	b2 e0       	ldi	r27, 0x02	; 2
+  90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
+
+00000092 <.do_clear_bss_loop>:
+  92:	1d 92       	st	X+, r1
+
+00000094 <.do_clear_bss_start>:
+  94:	ae 31       	cpi	r26, 0x1E	; 30
+  96:	b1 07       	cpc	r27, r17
+  98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
+  9a:	0e 94 7a 01 	call	0x2f4	; 0x2f4 <main>
+  9e:	0c 94 8b 02 	jmp	0x516	; 0x516 <_exit>
+
+000000a2 <__bad_interrupt>:
+  a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000a6 <ser_init>:
+// datasheet p.190; F_OSC = 16 MHz & baud rate = 19.200
+#define UBBRVAL 51
+
+void ser_init() {
+	// set the baud rate
+	UBRR0H = 0;
+  a6:	10 92 c5 00 	sts	0x00C5, r1
+	UBRR0L = UBBRVAL;
+  aa:	83 e3       	ldi	r24, 0x33	; 51
+  ac:	80 93 c4 00 	sts	0x00C4, r24
+	// disable U2X mode
+	UCSR0A = 0;
+  b0:	10 92 c0 00 	sts	0x00C0, r1
+	// enable TX and RX
+	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
+  b4:	88 e1       	ldi	r24, 0x18	; 24
+  b6:	80 93 c1 00 	sts	0x00C1, r24
+	// set frame format : asynchronous, 8 data bits, 1 stop bit, no parity
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+  ba:	86 e0       	ldi	r24, 0x06	; 6
+  bc:	80 93 c2 00 	sts	0x00C2, r24
+}
+  c0:	08 95       	ret
+
+000000c2 <ser_transmit>:
+
+// Low level transmit
+void ser_transmit(uint8_t data) {
+	// wait for an empty transmit buffer
+	// UDRE is set when the transmit buffer is empty
+	loop_until_bit_is_set(UCSR0A, UDRE0);
+  c2:	e0 ec       	ldi	r30, 0xC0	; 192
+  c4:	f0 e0       	ldi	r31, 0x00	; 0
+  c6:	90 81       	ld	r25, Z
+  c8:	95 ff       	sbrs	r25, 5
+  ca:	fd cf       	rjmp	.-6      	; 0xc6 <ser_transmit+0x4>
+	// send the data
+	UDR0 = data;
+  cc:	80 93 c6 00 	sts	0x00C6, r24
+}
+  d0:	08 95       	ret
+
+000000d2 <ser_receive>:
+
+// Low level receive
+uint8_t ser_receive() {
+    loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
+  d2:	e0 ec       	ldi	r30, 0xC0	; 192
+  d4:	f0 e0       	ldi	r31, 0x00	; 0
+  d6:	80 81       	ld	r24, Z
+  d8:	88 23       	and	r24, r24
+  da:	ec f7       	brge	.-6      	; 0xd6 <ser_receive+0x4>
+    return UDR0;
+  dc:	80 91 c6 00 	lds	r24, 0x00C6
+}
+  e0:	08 95       	ret
+
+000000e2 <ser_write>:
+
+// Hele regel schrijven
+
+void ser_write(char *s) {
+  e2:	cf 93       	push	r28
+  e4:	df 93       	push	r29
+  e6:	ec 01       	movw	r28, r24
+	int i=0;
+	while (s[i]!='\0') {
+  e8:	88 81       	ld	r24, Y
+  ea:	88 23       	and	r24, r24
+  ec:	31 f0       	breq	.+12     	; 0xfa <ser_write+0x18>
+    return UDR0;
+}
+
+// Hele regel schrijven
+
+void ser_write(char *s) {
+  ee:	21 96       	adiw	r28, 0x01	; 1
+	int i=0;
+	while (s[i]!='\0') {
+		ser_transmit(s[i++]);
+  f0:	0e 94 61 00 	call	0xc2	; 0xc2 <ser_transmit>
+
+// Hele regel schrijven
+
+void ser_write(char *s) {
+	int i=0;
+	while (s[i]!='\0') {
+  f4:	89 91       	ld	r24, Y+
+  f6:	88 23       	and	r24, r24
+  f8:	d9 f7       	brne	.-10     	; 0xf0 <ser_write+0xe>
+		ser_transmit(s[i++]);
+	}
+}
+  fa:	df 91       	pop	r29
+  fc:	cf 91       	pop	r28
+  fe:	08 95       	ret
+
+00000100 <ser_writeln>:
+
+void ser_writeln(char* s) {
+	ser_write(s);
+ 100:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+	ser_transmit('\r');
+ 104:	8d e0       	ldi	r24, 0x0D	; 13
+ 106:	0e 94 61 00 	call	0xc2	; 0xc2 <ser_transmit>
+	ser_transmit('\n');
+ 10a:	8a e0       	ldi	r24, 0x0A	; 10
+ 10c:	0e 94 61 00 	call	0xc2	; 0xc2 <ser_transmit>
+}
+ 110:	08 95       	ret
+
+00000112 <ser_readln>:
+
+// Hele regel lezen
+void ser_readln(char* buf, int maxlength, uint8_t echo) {
+ 112:	af 92       	push	r10
+ 114:	bf 92       	push	r11
+ 116:	cf 92       	push	r12
+ 118:	df 92       	push	r13
+ 11a:	ef 92       	push	r14
+ 11c:	ff 92       	push	r15
+ 11e:	0f 93       	push	r16
+ 120:	1f 93       	push	r17
+ 122:	cf 93       	push	r28
+ 124:	df 93       	push	r29
+ 126:	5c 01       	movw	r10, r24
+ 128:	d4 2f       	mov	r29, r20
+	int i=0;
+ 12a:	6c 01       	movw	r12, r24
+ 12c:	ee 24       	eor	r14, r14
+ 12e:	ff 24       	eor	r15, r15
+		if (echo) ser_transmit(c);
+		if (c=='\r') {
+			if (echo) ser_transmit('\n');
+			break; // ENTER ontvangen
+		}
+		if (i<maxlength-1) {
+ 130:	8b 01       	movw	r16, r22
+ 132:	01 50       	subi	r16, 0x01	; 1
+ 134:	10 40       	sbci	r17, 0x00	; 0
+
+// Hele regel lezen
+void ser_readln(char* buf, int maxlength, uint8_t echo) {
+	int i=0;
+	while(1) {
+		uint8_t c = ser_receive();
+ 136:	0e 94 69 00 	call	0xd2	; 0xd2 <ser_receive>
+ 13a:	c8 2f       	mov	r28, r24
+		if (echo) ser_transmit(c);
+ 13c:	dd 23       	and	r29, r29
+ 13e:	11 f0       	breq	.+4      	; 0x144 <ser_readln+0x32>
+ 140:	0e 94 61 00 	call	0xc2	; 0xc2 <ser_transmit>
+		if (c=='\r') {
+ 144:	cd 30       	cpi	r28, 0x0D	; 13
+ 146:	31 f4       	brne	.+12     	; 0x154 <ser_readln+0x42>
+			if (echo) ser_transmit('\n');
+ 148:	dd 23       	and	r29, r29
+ 14a:	71 f0       	breq	.+28     	; 0x168 <ser_readln+0x56>
+ 14c:	8a e0       	ldi	r24, 0x0A	; 10
+ 14e:	0e 94 61 00 	call	0xc2	; 0xc2 <ser_transmit>
+ 152:	0a c0       	rjmp	.+20     	; 0x168 <ser_readln+0x56>
+			break; // ENTER ontvangen
+		}
+		if (i<maxlength-1) {
+ 154:	e0 16       	cp	r14, r16
+ 156:	f1 06       	cpc	r15, r17
+ 158:	74 f7       	brge	.-36     	; 0x136 <ser_readln+0x24>
+			buf[i++]=c;
+ 15a:	f6 01       	movw	r30, r12
+ 15c:	c1 93       	st	Z+, r28
+ 15e:	6f 01       	movw	r12, r30
+ 160:	08 94       	sec
+ 162:	e1 1c       	adc	r14, r1
+ 164:	f1 1c       	adc	r15, r1
+ 166:	e7 cf       	rjmp	.-50     	; 0x136 <ser_readln+0x24>
+		}
+	}
+	buf[i]='\0';
+ 168:	ea 0c       	add	r14, r10
+ 16a:	fb 1c       	adc	r15, r11
+ 16c:	f7 01       	movw	r30, r14
+ 16e:	10 82       	st	Z, r1
+}
+ 170:	df 91       	pop	r29
+ 172:	cf 91       	pop	r28
+ 174:	1f 91       	pop	r17
+ 176:	0f 91       	pop	r16
+ 178:	ff 90       	pop	r15
+ 17a:	ef 90       	pop	r14
+ 17c:	df 90       	pop	r13
+ 17e:	cf 90       	pop	r12
+ 180:	bf 90       	pop	r11
+ 182:	af 90       	pop	r10
+ 184:	08 95       	ret
+
+00000186 <oprollen>:
+	i = 0;
+	ser_writeln("\n\r201 Zonnescherm is uitgerold\n");
+	_delay_ms(DELAY_MS);
+}
+
+void oprollen(){
+ 186:	cf 93       	push	r28
+ 188:	df 93       	push	r29
+	IN = (IN + 1);
+ 18a:	80 91 1c 03 	lds	r24, 0x031C
+ 18e:	90 91 1d 03 	lds	r25, 0x031D
+ 192:	01 96       	adiw	r24, 0x01	; 1
+ 194:	90 93 1d 03 	sts	0x031D, r25
+ 198:	80 93 1c 03 	sts	0x031C, r24
+	OUT = (OUT + 1);
+ 19c:	80 91 fa 02 	lds	r24, 0x02FA
+ 1a0:	90 91 fb 02 	lds	r25, 0x02FB
+ 1a4:	01 96       	adiw	r24, 0x01	; 1
+ 1a6:	90 93 fb 02 	sts	0x02FB, r25
+ 1aa:	80 93 fa 02 	sts	0x02FA, r24
+	ser_write("250 "); //Geef aan dat het commando is gelukt
+ 1ae:	80 e0       	ldi	r24, 0x00	; 0
+ 1b0:	91 e0       	ldi	r25, 0x01	; 1
+ 1b2:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+	// Zet pin 3 uit (rode lampje)
+	PORTB &= ~_BV(PORTB3);
+ 1b6:	2b 98       	cbi	0x05, 3	; 5
+	PORTD = 0x00; //													DELETE AFTER
+ 1b8:	1b b8       	out	0x0b, r1	; 11
+	// Zet pin 5 aan (groene lampje)
+	PORTB |= _BV(PORTB5);
+ 1ba:	2d 9a       	sbi	0x05, 5	; 5
+		PORTB |= _BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		PORTB &= ~_BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		i += 1;
+	if (i % 2 == 0){ser_write(".");}
+ 1bc:	c5 e0       	ldi	r28, 0x05	; 5
+ 1be:	d1 e0       	ldi	r29, 0x01	; 1
+	// Zet pin 3 uit (rode lampje)
+	PORTB &= ~_BV(PORTB3);
+	PORTD = 0x00; //													DELETE AFTER
+	// Zet pin 5 aan (groene lampje)
+	PORTB |= _BV(PORTB5);
+	while (i < 25){
+ 1c0:	22 c0       	rjmp	.+68     	; 0x206 <oprollen+0x80>
+		// Laat pin 4 knippen (gele lampje)
+		PORTB |= _BV(PORTB4);
+ 1c2:	2c 9a       	sbi	0x05, 4	; 5
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 1c4:	8f e3       	ldi	r24, 0x3F	; 63
+ 1c6:	9d e0       	ldi	r25, 0x0D	; 13
+ 1c8:	a3 e0       	ldi	r26, 0x03	; 3
+ 1ca:	81 50       	subi	r24, 0x01	; 1
+ 1cc:	90 40       	sbci	r25, 0x00	; 0
+ 1ce:	a0 40       	sbci	r26, 0x00	; 0
+ 1d0:	e1 f7       	brne	.-8      	; 0x1ca <oprollen+0x44>
+ 1d2:	00 c0       	rjmp	.+0      	; 0x1d4 <oprollen+0x4e>
+ 1d4:	00 00       	nop
+		_delay_ms(DELAY_MS);
+		PORTB &= ~_BV(PORTB4);
+ 1d6:	2c 98       	cbi	0x05, 4	; 5
+ 1d8:	8f e3       	ldi	r24, 0x3F	; 63
+ 1da:	9d e0       	ldi	r25, 0x0D	; 13
+ 1dc:	a3 e0       	ldi	r26, 0x03	; 3
+ 1de:	81 50       	subi	r24, 0x01	; 1
+ 1e0:	90 40       	sbci	r25, 0x00	; 0
+ 1e2:	a0 40       	sbci	r26, 0x00	; 0
+ 1e4:	e1 f7       	brne	.-8      	; 0x1de <oprollen+0x58>
+ 1e6:	00 c0       	rjmp	.+0      	; 0x1e8 <oprollen+0x62>
+ 1e8:	00 00       	nop
+		_delay_ms(DELAY_MS);
+		i += 1;
+ 1ea:	80 91 fc 02 	lds	r24, 0x02FC
+ 1ee:	90 91 fd 02 	lds	r25, 0x02FD
+ 1f2:	01 96       	adiw	r24, 0x01	; 1
+ 1f4:	90 93 fd 02 	sts	0x02FD, r25
+ 1f8:	80 93 fc 02 	sts	0x02FC, r24
+	if (i % 2 == 0){ser_write(".");}
+ 1fc:	80 fd       	sbrc	r24, 0
+ 1fe:	03 c0       	rjmp	.+6      	; 0x206 <oprollen+0x80>
+ 200:	ce 01       	movw	r24, r28
+ 202:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+	// Zet pin 3 uit (rode lampje)
+	PORTB &= ~_BV(PORTB3);
+	PORTD = 0x00; //													DELETE AFTER
+	// Zet pin 5 aan (groene lampje)
+	PORTB |= _BV(PORTB5);
+	while (i < 25){
+ 206:	80 91 fc 02 	lds	r24, 0x02FC
+ 20a:	90 91 fd 02 	lds	r25, 0x02FD
+ 20e:	89 31       	cpi	r24, 0x19	; 25
+ 210:	91 05       	cpc	r25, r1
+ 212:	bc f2       	brlt	.-82     	; 0x1c2 <oprollen+0x3c>
+		PORTB &= ~_BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		i += 1;
+	if (i % 2 == 0){ser_write(".");}
+	}
+	i = 0;
+ 214:	10 92 fd 02 	sts	0x02FD, r1
+ 218:	10 92 fc 02 	sts	0x02FC, r1
+	ser_writeln("\n\r201 Zonnescherm is opgerold\n");
+ 21c:	87 e0       	ldi	r24, 0x07	; 7
+ 21e:	91 e0       	ldi	r25, 0x01	; 1
+ 220:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+ 224:	8f e3       	ldi	r24, 0x3F	; 63
+ 226:	9d e0       	ldi	r25, 0x0D	; 13
+ 228:	a3 e0       	ldi	r26, 0x03	; 3
+ 22a:	81 50       	subi	r24, 0x01	; 1
+ 22c:	90 40       	sbci	r25, 0x00	; 0
+ 22e:	a0 40       	sbci	r26, 0x00	; 0
+ 230:	e1 f7       	brne	.-8      	; 0x22a <oprollen+0xa4>
+ 232:	00 c0       	rjmp	.+0      	; 0x234 <oprollen+0xae>
+ 234:	00 00       	nop
+	_delay_ms(DELAY_MS);	
+}
+ 236:	df 91       	pop	r29
+ 238:	cf 91       	pop	r28
+ 23a:	08 95       	ret
+
+0000023c <uitrollen>:
+			ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
+		}
+	}
+}
+
+void uitrollen(){
+ 23c:	cf 93       	push	r28
+ 23e:	df 93       	push	r29
+	OUT = (OUT + 1);
+ 240:	80 91 fa 02 	lds	r24, 0x02FA
+ 244:	90 91 fb 02 	lds	r25, 0x02FB
+ 248:	01 96       	adiw	r24, 0x01	; 1
+ 24a:	90 93 fb 02 	sts	0x02FB, r25
+ 24e:	80 93 fa 02 	sts	0x02FA, r24
+	IN = (IN + 1);
+ 252:	80 91 1c 03 	lds	r24, 0x031C
+ 256:	90 91 1d 03 	lds	r25, 0x031D
+ 25a:	01 96       	adiw	r24, 0x01	; 1
+ 25c:	90 93 1d 03 	sts	0x031D, r25
+ 260:	80 93 1c 03 	sts	0x031C, r24
+	ser_write("250 "); //Geef aan dat het commando is gelukt
+ 264:	80 e0       	ldi	r24, 0x00	; 0
+ 266:	91 e0       	ldi	r25, 0x01	; 1
+ 268:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+	// Zet pin 5 uit (groene lampje)
+	PORTB &= ~_BV(PORTB5);
+ 26c:	2d 98       	cbi	0x05, 5	; 5
+	PORTD = 0xff; //													DELETE AFTER
+ 26e:	8f ef       	ldi	r24, 0xFF	; 255
+ 270:	8b b9       	out	0x0b, r24	; 11
+	// Zet pin 3 aan (rode lampje)
+	PORTB |= _BV(PORTB3);
+ 272:	2b 9a       	sbi	0x05, 3	; 5
+		PORTB |= _BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		PORTB &= ~_BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		i += 1;
+		if (i % 2 == 0){ser_write(".");}
+ 274:	c5 e0       	ldi	r28, 0x05	; 5
+ 276:	d1 e0       	ldi	r29, 0x01	; 1
+	// Zet pin 5 uit (groene lampje)
+	PORTB &= ~_BV(PORTB5);
+	PORTD = 0xff; //													DELETE AFTER
+	// Zet pin 3 aan (rode lampje)
+	PORTB |= _BV(PORTB3);
+	while (i < 25){
+ 278:	22 c0       	rjmp	.+68     	; 0x2be <uitrollen+0x82>
+		// Laat pin 4 knippen (gele lampje)
+		PORTB |= _BV(PORTB4);
+ 27a:	2c 9a       	sbi	0x05, 4	; 5
+ 27c:	8f e3       	ldi	r24, 0x3F	; 63
+ 27e:	9d e0       	ldi	r25, 0x0D	; 13
+ 280:	a3 e0       	ldi	r26, 0x03	; 3
+ 282:	81 50       	subi	r24, 0x01	; 1
+ 284:	90 40       	sbci	r25, 0x00	; 0
+ 286:	a0 40       	sbci	r26, 0x00	; 0
+ 288:	e1 f7       	brne	.-8      	; 0x282 <uitrollen+0x46>
+ 28a:	00 c0       	rjmp	.+0      	; 0x28c <uitrollen+0x50>
+ 28c:	00 00       	nop
+		_delay_ms(DELAY_MS);
+		PORTB &= ~_BV(PORTB4);
+ 28e:	2c 98       	cbi	0x05, 4	; 5
+ 290:	8f e3       	ldi	r24, 0x3F	; 63
+ 292:	9d e0       	ldi	r25, 0x0D	; 13
+ 294:	a3 e0       	ldi	r26, 0x03	; 3
+ 296:	81 50       	subi	r24, 0x01	; 1
+ 298:	90 40       	sbci	r25, 0x00	; 0
+ 29a:	a0 40       	sbci	r26, 0x00	; 0
+ 29c:	e1 f7       	brne	.-8      	; 0x296 <uitrollen+0x5a>
+ 29e:	00 c0       	rjmp	.+0      	; 0x2a0 <uitrollen+0x64>
+ 2a0:	00 00       	nop
+		_delay_ms(DELAY_MS);
+		i += 1;
+ 2a2:	80 91 fc 02 	lds	r24, 0x02FC
+ 2a6:	90 91 fd 02 	lds	r25, 0x02FD
+ 2aa:	01 96       	adiw	r24, 0x01	; 1
+ 2ac:	90 93 fd 02 	sts	0x02FD, r25
+ 2b0:	80 93 fc 02 	sts	0x02FC, r24
+		if (i % 2 == 0){ser_write(".");}
+ 2b4:	80 fd       	sbrc	r24, 0
+ 2b6:	03 c0       	rjmp	.+6      	; 0x2be <uitrollen+0x82>
+ 2b8:	ce 01       	movw	r24, r28
+ 2ba:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+	// Zet pin 5 uit (groene lampje)
+	PORTB &= ~_BV(PORTB5);
+	PORTD = 0xff; //													DELETE AFTER
+	// Zet pin 3 aan (rode lampje)
+	PORTB |= _BV(PORTB3);
+	while (i < 25){
+ 2be:	80 91 fc 02 	lds	r24, 0x02FC
+ 2c2:	90 91 fd 02 	lds	r25, 0x02FD
+ 2c6:	89 31       	cpi	r24, 0x19	; 25
+ 2c8:	91 05       	cpc	r25, r1
+ 2ca:	bc f2       	brlt	.-82     	; 0x27a <uitrollen+0x3e>
+		PORTB &= ~_BV(PORTB4);
+		_delay_ms(DELAY_MS);
+		i += 1;
+		if (i % 2 == 0){ser_write(".");}
+	}
+	i = 0;
+ 2cc:	10 92 fd 02 	sts	0x02FD, r1
+ 2d0:	10 92 fc 02 	sts	0x02FC, r1
+	ser_writeln("\n\r201 Zonnescherm is uitgerold\n");
+ 2d4:	86 e2       	ldi	r24, 0x26	; 38
+ 2d6:	91 e0       	ldi	r25, 0x01	; 1
+ 2d8:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+ 2dc:	8f e3       	ldi	r24, 0x3F	; 63
+ 2de:	9d e0       	ldi	r25, 0x0D	; 13
+ 2e0:	a3 e0       	ldi	r26, 0x03	; 3
+ 2e2:	81 50       	subi	r24, 0x01	; 1
+ 2e4:	90 40       	sbci	r25, 0x00	; 0
+ 2e6:	a0 40       	sbci	r26, 0x00	; 0
+ 2e8:	e1 f7       	brne	.-8      	; 0x2e2 <uitrollen+0xa6>
+ 2ea:	00 c0       	rjmp	.+0      	; 0x2ec <uitrollen+0xb0>
+ 2ec:	00 00       	nop
+	_delay_ms(DELAY_MS);
+}
+ 2ee:	df 91       	pop	r29
+ 2f0:	cf 91       	pop	r28
+ 2f2:	08 95       	ret
+
+000002f4 <main>:
+int i, IN, OUT = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
+
+char in_buf[30]; // Invoerbuffer
+
+int main() {
+	ser_init();
+ 2f4:	0e 94 53 00 	call	0xa6	; 0xa6 <ser_init>
+	// set pin 3,4,5 of PORTB for output
+	DDRB |= _BV(DDB3); 
+ 2f8:	23 9a       	sbi	0x04, 3	; 4
+	DDRB |= _BV(DDB4); 
+ 2fa:	24 9a       	sbi	0x04, 4	; 4
+	DDRB |= _BV(DDB5); 
+ 2fc:	25 9a       	sbi	0x04, 5	; 4
+	DDRD = 0xff; //													DELETE AFTER
+ 2fe:	8f ef       	ldi	r24, 0xFF	; 255
+ 300:	8a b9       	out	0x0a, r24	; 10
+	
+	EIMSK = 1 << INT0;//													DELETE AFTER
+ 302:	81 e0       	ldi	r24, 0x01	; 1
+ 304:	8d bb       	out	0x1d, r24	; 29
+	EICRA |= 1 << ISC00;
+ 306:	e9 e6       	ldi	r30, 0x69	; 105
+ 308:	f0 e0       	ldi	r31, 0x00	; 0
+ 30a:	90 81       	ld	r25, Z
+ 30c:	91 60       	ori	r25, 0x01	; 1
+ 30e:	90 83       	st	Z, r25
+	EIFR =  1 << INTF0;
+ 310:	8c bb       	out	0x1c, r24	; 28
+	sei();
+ 312:	78 94       	sei
+	// LED op Portb5 aan = Zonnescherm opgerold (rode lampje)
+	PORTB |= _BV(PORTB5);
+ 314:	2d 9a       	sbi	0x05, 5	; 5
+	while (1) {
+		ser_write("Wat kan ik voor u doen?");
+ 316:	06 e4       	ldi	r16, 0x46	; 70
+ 318:	11 e0       	ldi	r17, 0x01	; 1
+		ser_readln(in_buf, sizeof(in_buf), 1);
+ 31a:	ce ef       	ldi	r28, 0xFE	; 254
+ 31c:	d2 e0       	ldi	r29, 0x02	; 2
+/**********************************************************Zonnescherm uitrollen************************************************************/
+			if (strcmp("Uitrollen", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
+ 31e:	0f 2e       	mov	r0, r31
+ 320:	fe e5       	ldi	r31, 0x5E	; 94
+ 322:	ef 2e       	mov	r14, r31
+ 324:	f1 e0       	ldi	r31, 0x01	; 1
+ 326:	ff 2e       	mov	r15, r31
+ 328:	f0 2d       	mov	r31, r0
+				if ((OUT % 2) == 1){
+ 32a:	cc 24       	eor	r12, r12
+ 32c:	dd 24       	eor	r13, r13
+ 32e:	68 94       	set
+ 330:	c1 f8       	bld	r12, 1
+				} if((OUT % 2) == 0){
+					uitrollen();
+				}				
+			}
+/*---------------------------------------------------------Zonnescherm oprollen------------------------------------------------------------*/ 
+			else if(strcmp("Oprollen", in_buf) == 0){
+ 332:	0f 2e       	mov	r0, r31
+ 334:	f5 e8       	ldi	r31, 0x85	; 133
+ 336:	af 2e       	mov	r10, r31
+ 338:	f1 e0       	ldi	r31, 0x01	; 1
+ 33a:	bf 2e       	mov	r11, r31
+ 33c:	f0 2d       	mov	r31, r0
+				} if((IN % 2) == 1){
+					oprollen();
+				}				
+			} 
+/*****************************************************************Exit**********************************************************************/			
+			else if(strcmp("Exit", in_buf) == 0){
+ 33e:	0f 2e       	mov	r0, r31
+ 340:	fa ea       	ldi	r31, 0xAA	; 170
+ 342:	8f 2e       	mov	r8, r31
+ 344:	f1 e0       	ldi	r31, 0x01	; 1
+ 346:	9f 2e       	mov	r9, r31
+ 348:	f0 2d       	mov	r31, r0
+				}
+				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
+				abort();
+			}
+/*----------------------------------------------------------------Help---------------------------------------------------------------------*/
+		else if(strcmp("Help", in_buf) == 0){
+ 34a:	0f 2e       	mov	r0, r31
+ 34c:	f8 eb       	ldi	r31, 0xB8	; 184
+ 34e:	6f 2e       	mov	r6, r31
+ 350:	f1 e0       	ldi	r31, 0x01	; 1
+ 352:	7f 2e       	mov	r7, r31
+ 354:	f0 2d       	mov	r31, r0
+			"Exit\t\t\tSluit het programma\n"
+			);
+		}
+/*********************************************************Commando niet gevonden************************************************************/		
+		else{
+			ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
+ 356:	0f 2e       	mov	r0, r31
+ 358:	ff ea       	ldi	r31, 0xAF	; 175
+ 35a:	4f 2e       	mov	r4, r31
+ 35c:	f2 e0       	ldi	r31, 0x02	; 2
+ 35e:	5f 2e       	mov	r5, r31
+ 360:	f0 2d       	mov	r31, r0
+				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
+				abort();
+			}
+/*----------------------------------------------------------------Help---------------------------------------------------------------------*/
+		else if(strcmp("Help", in_buf) == 0){
+			ser_writeln(
+ 362:	0f 2e       	mov	r0, r31
+ 364:	fd eb       	ldi	r31, 0xBD	; 189
+ 366:	2f 2e       	mov	r2, r31
+ 368:	f1 e0       	ldi	r31, 0x01	; 1
+ 36a:	3f 2e       	mov	r3, r31
+ 36c:	f0 2d       	mov	r31, r0
+	EIFR =  1 << INTF0;
+	sei();
+	// LED op Portb5 aan = Zonnescherm opgerold (rode lampje)
+	PORTB |= _BV(PORTB5);
+	while (1) {
+		ser_write("Wat kan ik voor u doen?");
+ 36e:	c8 01       	movw	r24, r16
+ 370:	0e 94 71 00 	call	0xe2	; 0xe2 <ser_write>
+		ser_readln(in_buf, sizeof(in_buf), 1);
+ 374:	ce 01       	movw	r24, r28
+ 376:	6e e1       	ldi	r22, 0x1E	; 30
+ 378:	70 e0       	ldi	r23, 0x00	; 0
+ 37a:	41 e0       	ldi	r20, 0x01	; 1
+ 37c:	0e 94 89 00 	call	0x112	; 0x112 <ser_readln>
+/**********************************************************Zonnescherm uitrollen************************************************************/
+			if (strcmp("Uitrollen", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
+ 380:	c7 01       	movw	r24, r14
+ 382:	be 01       	movw	r22, r28
+ 384:	0e 94 82 02 	call	0x504	; 0x504 <strcmp>
+ 388:	28 2f       	mov	r18, r24
+ 38a:	39 2f       	mov	r19, r25
+ 38c:	21 15       	cp	r18, r1
+ 38e:	31 05       	cpc	r19, r1
+ 390:	a9 f4       	brne	.+42     	; 0x3bc <main+0xc8>
+				if ((OUT % 2) == 1){
+ 392:	80 91 fa 02 	lds	r24, 0x02FA
+ 396:	90 91 fb 02 	lds	r25, 0x02FB
+ 39a:	b6 01       	movw	r22, r12
+ 39c:	0e 94 56 02 	call	0x4ac	; 0x4ac <__divmodhi4>
+ 3a0:	81 30       	cpi	r24, 0x01	; 1
+ 3a2:	91 05       	cpc	r25, r1
+ 3a4:	21 f4       	brne	.+8      	; 0x3ae <main+0xba>
+					ser_writeln("Zonnescherm is al uitgerold!");
+ 3a6:	88 e6       	ldi	r24, 0x68	; 104
+ 3a8:	91 e0       	ldi	r25, 0x01	; 1
+ 3aa:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+				} if((OUT % 2) == 0){
+ 3ae:	80 91 fa 02 	lds	r24, 0x02FA
+ 3b2:	80 fd       	sbrc	r24, 0
+ 3b4:	dc cf       	rjmp	.-72     	; 0x36e <main+0x7a>
+					uitrollen();
+ 3b6:	0e 94 1e 01 	call	0x23c	; 0x23c <uitrollen>
+ 3ba:	d9 cf       	rjmp	.-78     	; 0x36e <main+0x7a>
+				}				
+			}
+/*---------------------------------------------------------Zonnescherm oprollen------------------------------------------------------------*/ 
+			else if(strcmp("Oprollen", in_buf) == 0){
+ 3bc:	c5 01       	movw	r24, r10
+ 3be:	be 01       	movw	r22, r28
+ 3c0:	0e 94 82 02 	call	0x504	; 0x504 <strcmp>
+ 3c4:	28 2f       	mov	r18, r24
+ 3c6:	39 2f       	mov	r19, r25
+ 3c8:	21 15       	cp	r18, r1
+ 3ca:	31 05       	cpc	r19, r1
+ 3cc:	b1 f4       	brne	.+44     	; 0x3fa <main+0x106>
+				if ((IN % 2) == 0){
+ 3ce:	80 91 1c 03 	lds	r24, 0x031C
+ 3d2:	80 fd       	sbrc	r24, 0
+ 3d4:	04 c0       	rjmp	.+8      	; 0x3de <main+0xea>
+					ser_writeln("Zonnescherm is al opgerold!");
+ 3d6:	8e e8       	ldi	r24, 0x8E	; 142
+ 3d8:	91 e0       	ldi	r25, 0x01	; 1
+ 3da:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+				} if((IN % 2) == 1){
+ 3de:	80 91 1c 03 	lds	r24, 0x031C
+ 3e2:	90 91 1d 03 	lds	r25, 0x031D
+ 3e6:	b6 01       	movw	r22, r12
+ 3e8:	0e 94 56 02 	call	0x4ac	; 0x4ac <__divmodhi4>
+ 3ec:	81 30       	cpi	r24, 0x01	; 1
+ 3ee:	91 05       	cpc	r25, r1
+ 3f0:	09 f0       	breq	.+2      	; 0x3f4 <main+0x100>
+ 3f2:	bd cf       	rjmp	.-134    	; 0x36e <main+0x7a>
+					oprollen();
+ 3f4:	0e 94 c3 00 	call	0x186	; 0x186 <oprollen>
+ 3f8:	ba cf       	rjmp	.-140    	; 0x36e <main+0x7a>
+				}				
+			} 
+/*****************************************************************Exit**********************************************************************/			
+			else if(strcmp("Exit", in_buf) == 0){
+ 3fa:	c4 01       	movw	r24, r8
+ 3fc:	be 01       	movw	r22, r28
+ 3fe:	0e 94 82 02 	call	0x504	; 0x504 <strcmp>
+ 402:	28 2f       	mov	r18, r24
+ 404:	39 2f       	mov	r19, r25
+ 406:	21 15       	cp	r18, r1
+ 408:	31 05       	cpc	r19, r1
+ 40a:	99 f4       	brne	.+38     	; 0x432 <main+0x13e>
+				if ((OUT % 2) == 1){
+ 40c:	80 91 fa 02 	lds	r24, 0x02FA
+ 410:	90 91 fb 02 	lds	r25, 0x02FB
+ 414:	62 e0       	ldi	r22, 0x02	; 2
+ 416:	70 e0       	ldi	r23, 0x00	; 0
+ 418:	0e 94 56 02 	call	0x4ac	; 0x4ac <__divmodhi4>
+ 41c:	81 30       	cpi	r24, 0x01	; 1
+ 41e:	91 05       	cpc	r25, r1
+ 420:	11 f4       	brne	.+4      	; 0x426 <main+0x132>
+					uitrollen();					
+ 422:	0e 94 1e 01 	call	0x23c	; 0x23c <uitrollen>
+				}
+				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
+ 426:	8f ea       	ldi	r24, 0xAF	; 175
+ 428:	91 e0       	ldi	r25, 0x01	; 1
+ 42a:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+				abort();
+ 42e:	0e 94 7d 02 	call	0x4fa	; 0x4fa <abort>
+			}
+/*----------------------------------------------------------------Help---------------------------------------------------------------------*/
+		else if(strcmp("Help", in_buf) == 0){
+ 432:	c3 01       	movw	r24, r6
+ 434:	be 01       	movw	r22, r28
+ 436:	0e 94 82 02 	call	0x504	; 0x504 <strcmp>
+ 43a:	28 2f       	mov	r18, r24
+ 43c:	39 2f       	mov	r19, r25
+ 43e:	21 15       	cp	r18, r1
+ 440:	31 05       	cpc	r19, r1
+ 442:	21 f4       	brne	.+8      	; 0x44c <main+0x158>
+			ser_writeln(
+ 444:	c1 01       	movw	r24, r2
+ 446:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+ 44a:	91 cf       	rjmp	.-222    	; 0x36e <main+0x7a>
+			"Exit\t\t\tSluit het programma\n"
+			);
+		}
+/*********************************************************Commando niet gevonden************************************************************/		
+		else{
+			ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
+ 44c:	c2 01       	movw	r24, r4
+ 44e:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+ 452:	8d cf       	rjmp	.-230    	; 0x36e <main+0x7a>
+
+00000454 <__vector_1>:
+	ser_writeln("\n\r201 Zonnescherm is opgerold\n");
+	_delay_ms(DELAY_MS);	
+}
+
+ISR(INT0_vect)
+{
+ 454:	1f 92       	push	r1
+ 456:	0f 92       	push	r0
+ 458:	0f b6       	in	r0, 0x3f	; 63
+ 45a:	0f 92       	push	r0
+ 45c:	11 24       	eor	r1, r1
+ 45e:	2f 93       	push	r18
+ 460:	3f 93       	push	r19
+ 462:	4f 93       	push	r20
+ 464:	5f 93       	push	r21
+ 466:	6f 93       	push	r22
+ 468:	7f 93       	push	r23
+ 46a:	8f 93       	push	r24
+ 46c:	9f 93       	push	r25
+ 46e:	af 93       	push	r26
+ 470:	bf 93       	push	r27
+ 472:	ef 93       	push	r30
+ 474:	ff 93       	push	r31
+ 476:	83 ed       	ldi	r24, 0xD3	; 211
+ 478:	90 e3       	ldi	r25, 0x30	; 48
+ 47a:	01 97       	sbiw	r24, 0x01	; 1
+ 47c:	f1 f7       	brne	.-4      	; 0x47a <__vector_1+0x26>
+ 47e:	00 c0       	rjmp	.+0      	; 0x480 <__vector_1+0x2c>
+ 480:	00 00       	nop
+	_delay_ms(50);
+	ser_writeln("Interupt werk!");
+ 482:	8b ee       	ldi	r24, 0xEB	; 235
+ 484:	92 e0       	ldi	r25, 0x02	; 2
+ 486:	0e 94 80 00 	call	0x100	; 0x100 <ser_writeln>
+ 48a:	ff 91       	pop	r31
+ 48c:	ef 91       	pop	r30
+ 48e:	bf 91       	pop	r27
+ 490:	af 91       	pop	r26
+ 492:	9f 91       	pop	r25
+ 494:	8f 91       	pop	r24
+ 496:	7f 91       	pop	r23
+ 498:	6f 91       	pop	r22
+ 49a:	5f 91       	pop	r21
+ 49c:	4f 91       	pop	r20
+ 49e:	3f 91       	pop	r19
+ 4a0:	2f 91       	pop	r18
+ 4a2:	0f 90       	pop	r0
+ 4a4:	0f be       	out	0x3f, r0	; 63
+ 4a6:	0f 90       	pop	r0
+ 4a8:	1f 90       	pop	r1
+ 4aa:	18 95       	reti
+
+000004ac <__divmodhi4>:
+ 4ac:	97 fb       	bst	r25, 7
+ 4ae:	09 2e       	mov	r0, r25
+ 4b0:	07 26       	eor	r0, r23
+ 4b2:	0a d0       	rcall	.+20     	; 0x4c8 <__divmodhi4_neg1>
+ 4b4:	77 fd       	sbrc	r23, 7
+ 4b6:	04 d0       	rcall	.+8      	; 0x4c0 <__divmodhi4_neg2>
+ 4b8:	0c d0       	rcall	.+24     	; 0x4d2 <__udivmodhi4>
+ 4ba:	06 d0       	rcall	.+12     	; 0x4c8 <__divmodhi4_neg1>
+ 4bc:	00 20       	and	r0, r0
+ 4be:	1a f4       	brpl	.+6      	; 0x4c6 <__divmodhi4_exit>
+
+000004c0 <__divmodhi4_neg2>:
+ 4c0:	70 95       	com	r23
+ 4c2:	61 95       	neg	r22
+ 4c4:	7f 4f       	sbci	r23, 0xFF	; 255
+
+000004c6 <__divmodhi4_exit>:
+ 4c6:	08 95       	ret
+
+000004c8 <__divmodhi4_neg1>:
+ 4c8:	f6 f7       	brtc	.-4      	; 0x4c6 <__divmodhi4_exit>
+ 4ca:	90 95       	com	r25
+ 4cc:	81 95       	neg	r24
+ 4ce:	9f 4f       	sbci	r25, 0xFF	; 255
+ 4d0:	08 95       	ret
+
+000004d2 <__udivmodhi4>:
+ 4d2:	aa 1b       	sub	r26, r26
+ 4d4:	bb 1b       	sub	r27, r27
+ 4d6:	51 e1       	ldi	r21, 0x11	; 17
+ 4d8:	07 c0       	rjmp	.+14     	; 0x4e8 <__udivmodhi4_ep>
+
+000004da <__udivmodhi4_loop>:
+ 4da:	aa 1f       	adc	r26, r26
+ 4dc:	bb 1f       	adc	r27, r27
+ 4de:	a6 17       	cp	r26, r22
+ 4e0:	b7 07       	cpc	r27, r23
+ 4e2:	10 f0       	brcs	.+4      	; 0x4e8 <__udivmodhi4_ep>
+ 4e4:	a6 1b       	sub	r26, r22
+ 4e6:	b7 0b       	sbc	r27, r23
+
+000004e8 <__udivmodhi4_ep>:
+ 4e8:	88 1f       	adc	r24, r24
+ 4ea:	99 1f       	adc	r25, r25
+ 4ec:	5a 95       	dec	r21
+ 4ee:	a9 f7       	brne	.-22     	; 0x4da <__udivmodhi4_loop>
+ 4f0:	80 95       	com	r24
+ 4f2:	90 95       	com	r25
+ 4f4:	bc 01       	movw	r22, r24
+ 4f6:	cd 01       	movw	r24, r26
+ 4f8:	08 95       	ret
+
+000004fa <abort>:
+ 4fa:	81 e0       	ldi	r24, 0x01	; 1
+ 4fc:	90 e0       	ldi	r25, 0x00	; 0
+ 4fe:	f8 94       	cli
+ 500:	0c 94 8b 02 	jmp	0x516	; 0x516 <_exit>
+
+00000504 <strcmp>:
+ 504:	fb 01       	movw	r30, r22
+ 506:	dc 01       	movw	r26, r24
+ 508:	8d 91       	ld	r24, X+
+ 50a:	01 90       	ld	r0, Z+
+ 50c:	80 19       	sub	r24, r0
+ 50e:	01 10       	cpse	r0, r1
+ 510:	d9 f3       	breq	.-10     	; 0x508 <strcmp+0x4>
+ 512:	99 0b       	sbc	r25, r25
+ 514:	08 95       	ret
+
+00000516 <_exit>:
+ 516:	f8 94       	cli
+
+00000518 <__stop_program>:
+ 518:	ff cf       	rjmp	.-2      	; 0x518 <__stop_program>
