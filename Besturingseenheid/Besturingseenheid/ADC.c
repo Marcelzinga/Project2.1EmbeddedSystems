@@ -40,7 +40,7 @@ uint8_t get_temp_adc(){
 	return ADC;
 }
 
-uint8_t get_licht_adc(){
+uint8_t get_light_adc(){
 	ADMUX = (1 << REFS0) | (1 << MUX1)| (1<<ADLAR); // port A2
 	ADCSRA |= (1<<ADSC); // start conversion
 	loop_until_bit_is_clear(ADCSRA, ADSC);

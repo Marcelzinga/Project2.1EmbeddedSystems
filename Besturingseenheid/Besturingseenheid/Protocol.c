@@ -45,7 +45,11 @@ void protocolCom(){
 					oprollen();
 				}				
 			} 
-/***********************************************************Get Temperatuur ******************************************************************/
+/**********************************************************Zonnescherm uitrollen************************************************************/
+			if (strcmp("STATUS", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
+
+			}
+/*--------------------------------------------------------Get Temperatuur -----------------------------------------------------------------*/
 			else if(strcmp("GET_TEMP", in_buf) == 0){
 				printf("202 TEMP= % 6.2f \n", getTemp());
 				/*double ADCRes = getTemp();
@@ -71,7 +75,32 @@ void protocolCom(){
 			else if(strcmp("SET_GRENS_LIGHT(Z)", in_buf) == 0){
 
 			}
+/*----------------------------------------------------------Afstandsensor---------------------------------------------------------------------*/
+			else if(strcmp("GET_MAX_UNROLL", in_buf) == 0){
 
+			}
+			else if(strcmp("SET_MAX_UNROLL(Z)", in_buf) == 0){
+
+			}
+			else if(strcmp("GET_MIN_UNROLL", in_buf) == 0){
+
+			}
+			else if(strcmp("SET_MIN_UNROLL(Z)", in_buf) == 0){
+
+			}
+/*----------------------------------------------------------Information---------------------------------------------------------------------*/
+			else if(strcmp("GET_NAME", in_buf) == 0){
+
+			}
+			else if(strcmp("SET_NAME", in_buf) == 0){
+
+			}
+			else if(strcmp("GET_LOCATION", in_buf) == 0){
+
+			}
+			else if(strcmp("SET_LOCATION(Z)", in_buf) == 0){
+
+			}
 
 /*****************************************************************Exit**********************************************************************/			
 			else if(strcmp("Exit", in_buf) == 0){

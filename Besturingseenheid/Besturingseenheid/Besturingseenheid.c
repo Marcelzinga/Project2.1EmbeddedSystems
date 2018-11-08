@@ -25,6 +25,12 @@ double Volt;
 double ADCRes;
 
 
+double GRENS_TEMP;
+uint8_t GRENS_LIGHT = 200;
+double MAX_UNROLL;
+double MIN_UNROLL;
+
+
 static volatile float pulse = 0;
 static volatile int i = 0;
 double afstand = 0;
@@ -60,14 +66,14 @@ int main(void)
 	
 	while(1){
 		protocolCom();
-		/* Afstandsensor tijdelijk stilgelegdt vanwege protocols testen
 		PORTB = (1<<PINB0); //set trigger HIGH
 		_delay_ms(500); //500 ms delay
 		PORTB &= ~(1<<PINB0); //set trigger LOW
 		
 		afstand = (pulse * 0.5) * 0.0023;
-		printf("% 6.2f cm \n", afstand);
-		*/
+		// Het printen van de afstand stilgellegt vanwege protocollen
+		//printf("% 6.2f cm \n", afstand);
+		
 
 	 }	
 }
@@ -87,7 +93,7 @@ double getTemp(){
 
 uint8_t getLight(){
 	//uint8_t temp = get_adc_value(PC5);
-	uint8_t temp = get_licht_adc();
+	uint8_t temp = get_light_adc();
 	return temp;
 }
 
@@ -113,6 +119,15 @@ ISR(TIMER0_COMPA_vect){
 		printf("%i temperatuur=% 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
+		
+		if(getLight()> GRENS_LIGHT)
+		{
+			uitrollen();
+		}
+		else{
+			oprollen();
+		}
+		
 		index++;
 		
 		// Resets de timer en de Totale timer ticks
