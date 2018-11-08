@@ -6,7 +6,7 @@
 // datasheet p.190; F_OSC = 16 MHz & baud rate = 19.200
 #define UBBRVAL 51
 
-// Getchar en putchar tbv. stdio.h
+// Getchar en putchar tbv. stdio.h 
 void ser_stdio_putchar(char c, FILE *stream) {
 	if (c=='\n') {
 		ser_transmit('\r');
@@ -41,8 +41,8 @@ void ser_transmit(uint8_t data) {
 
 // Low level receive
 uint8_t ser_receive() {
-	loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
-	return UDR0;
+    loop_until_bit_is_set(UCSR0A, RXC0); /* Wait until data exists. */
+    return UDR0;
 }
 
 // Hele regel schrijven
