@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include "Protocol.h"
 
 
 #define DELAY_MS 1000
@@ -36,8 +37,12 @@ void uitrollen(){
 	PORTB &= ~_BV(PORTB5);
 	//PORTD = 0xff; //													DELETE AFTER
 	// Zet pin 3 aan (rode lampje)
+	
 	PORTB |= _BV(PORTB3);
-	while (j < 25){
+	
+	printf("Zonnescherm % 6.2f cm \n", getDistance());
+	
+	while (j<25){
 		// Laat pin 4 knippen (gele lampje)
 		PORTB |= _BV(PORTB4);
 		_delay_ms(DELAY_MS);
@@ -60,16 +65,19 @@ void oprollen(){
 	//PORTD = 0x00; //													DELETE AFTER
 	// Zet pin 5 aan (groene lampje)
 	PORTB |= _BV(PORTB5);
-	while (j < 25){
+	
+	printf("Zonnescherm % 6.2f cm \n", getDistance());
+	
+	while (j<25){
 		// Laat pin 4 knippen (gele lampje)
 		PORTB |= _BV(PORTB4);
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
 		j += 1;
-	if (j % 2 == 0){ser_write(".");}
+		if (j % 2 == 0){ser_write(".");}
+		}			
+		j = 0;
+		ser_writeln("\n\r201 Zonnescherm is opgerold\n");
+		_delay_ms(DELAY_MS);
 	}
-	j = 0;
-	ser_writeln("\n\r201 Zonnescherm is opgerold\n");
-	_delay_ms(DELAY_MS);	
-}

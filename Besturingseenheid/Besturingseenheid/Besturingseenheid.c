@@ -27,10 +27,7 @@ double Volt;
 double ADCRes;
 
 
-double GRENS_TEMP;
-uint8_t GRENS_LIGHT = 200;
-double MAX_UNROLL;
-double MIN_UNROLL;
+
 
 
 static volatile float pulse = 0;
@@ -69,15 +66,14 @@ int main(void)
 	
 	while(1){
 		protocolCom();
+		
 		PORTB = (1<<PINB0); //set trigger HIGH
 		_delay_ms(500); //500 ms delay
 		PORTB &= ~(1<<PINB0); //set trigger LOW
 		
 		afstand = (pulse * 0.5) * 0.0023;
-		// Het printen van de afstand stilgellegt vanwege protocollen
-		//printf("% 6.2f cm \n", afstand);
 		
-
+		//printf("% 6.2f cm \n", afstand);
 	 }	
 }
 
@@ -87,6 +83,11 @@ int main(void)
 	omdat wanneer ik een if else statement gebruikte het niet de 
 	gewenste resultaten toonde.
 */
+
+double getDistance(){
+	return afstand;
+}
+
 double getTemp(){
 	//uint8_t temp = get_adc_value(PC2);
 	Volt = get_temp_adc() * 0.0048828125;
@@ -118,19 +119,25 @@ ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
 	
-	if(extraTime>3000){
+	if(extraTime>1000){
 		printf("%i temperatuur=% 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
-		
-		if(getLight()> GRENS_LIGHT && (getOut() % 2) == 0)
+		_delay_ms(10);
+		//printf("Zonnescherm: % 6.2f cm \n", afstand);
+
+		_delay_ms(10);
+		printf("%d, %d, %i, %i", getLight(), get_grens_light(), getIn(), getOut());
+		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
 		{
+			printf("test1");
 			uitrollen();
 		}
-		if(getLight()< GRENS_LIGHT && (getIn() % 2) == 1)
+		if(getLight()< get_grens_light() && (getIn() % 2) == 1)
 		{
+			printf("test2");
 			oprollen();
-		}				
+		}	
 	
 		index++;
 		

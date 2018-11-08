@@ -11,12 +11,33 @@
 
 char in_buf[30]; // Invoerbuffer
 
+
+double GRENS_TEMP= 25;
+uint8_t GRENS_LIGHT = 180;
+double MAX_UNROLL= 50.0;
+double MIN_UNROLL= 0.05;
+
+uint8_t get_grens_light(){
+	return GRENS_LIGHT;
+}	
+
+uint8_t get_grens_temp(){
+	return GRENS_TEMP;
+}
+
+double get_max_unroll(){
+	return MAX_UNROLL;
+}
+double get_min_unroll(){
+	return MIN_UNROLL;
+}
+
 void protocolCom(){
-	//while (1) {
+	while (1) {
 		ser_write("Wat kan ik voor u doen?");
 		ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
-			if (strcmp("Uitrollen", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
+			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
 				if ((getOut() % 2) == 1){
 					ser_writeln("Zonnescherm is al uitgerold!");
 				} if((getOut() % 2) == 0){
@@ -24,7 +45,7 @@ void protocolCom(){
 				}				
 			}
 /*---------------------------------------------------------Zonnescherm oprollen------------------------------------------------------------*/ 
-			else if(strcmp("Oprollen", in_buf) == 0){
+			else if(strcmp("ROLLUP", in_buf) == 0){
 				if ((getIn() % 2) == 0){
 					ser_writeln("Zonnescherm is al opgerold!");
 				} if((getIn() % 2) == 1){
@@ -45,10 +66,10 @@ void protocolCom(){
 				ser_write("202 TEMP: "); ser_writeln(ADCOut);*/
 			}
 			else if(strcmp("GET_GRENS_TEMP", in_buf) == 0){
-				
+				printf("202 GRENS_TEMP: % 6.2f \n", GRENS_TEMP);
 			}
 			else if(strcmp("SET_GRENS_TEMP(Z)", in_buf) == 0){
-				
+				printf("203 GRENS_TEMP: %6.2f -> %6.2f ", GRENS_LIGHT, in_buf);
 			}
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/
 			else if(strcmp("GET_LIGHT", in_buf) == 0){
@@ -56,36 +77,36 @@ void protocolCom(){
 			}
 			
 			else if(strcmp("GET_GRENS_LIGHT", in_buf) == 0){
-
+				printf("202 GRENS_LIGHT: % 6.2f \n", GRENS_LIGHT);
 			}
 			else if(strcmp("SET_GRENS_LIGHT(Z)", in_buf) == 0){
-
+				printf("203 GRENS_LIGHT: %6.2f -> %6.2f ", GRENS_LIGHT, in_buf);
 			}
 /*----------------------------------------------------------Afstandsensor---------------------------------------------------------------------*/
 			else if(strcmp("GET_MAX_UNROLL", in_buf) == 0){
-
+				printf("202 TEMP= % 6.2f \n", MAX_UNROLL);
 			}
 			else if(strcmp("SET_MAX_UNROLL(Z)", in_buf) == 0){
-
+				printf("203 MAX_UNROLL: %6.2f -> %6.2f ", MAX_UNROLL, in_buf);
 			}
 			else if(strcmp("GET_MIN_UNROLL", in_buf) == 0){
-
+				printf("203 MAX_UNROLL: %6.2f -> %6.2f ", MIN_UNROLL);
 			}
 			else if(strcmp("SET_MIN_UNROLL(Z)", in_buf) == 0){
-
+				printf("203 MIN_UNROLL: %6.2f -> %6.2f ", MAX_UNROLL, in_buf);
 			}
 /*----------------------------------------------------------Information---------------------------------------------------------------------*/
 			else if(strcmp("GET_NAME", in_buf) == 0){
 
 			}
 			else if(strcmp("SET_NAME", in_buf) == 0){
-
+				printf("200 OK ");
 			}
 			else if(strcmp("GET_LOCATION", in_buf) == 0){
 
 			}
 			else if(strcmp("SET_LOCATION(Z)", in_buf) == 0){
-
+				printf("200 OK ");
 			}
 
 /*****************************************************************Exit**********************************************************************/			
@@ -129,58 +150,5 @@ void protocolCom(){
 			else{
 				ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
 			}		
-}
-
-/*
-void uitrollen(){
-	OUT = (OUT + 1);
-	IN = (IN + 1);
-	ser_write("250 "); //Geef aan dat het commando is gelukt
-	// Zet pin 5 uit (groene lampje)
-	PORTB &= ~_BV(PORTB5);
-	//PORTD = 0xff; //													DELETE AFTER
-	// Zet pin 3 aan (rode lampje)
-	PORTB |= _BV(PORTB3);
-	while (i < 25){
-		// Laat pin 4 knippen (gele lampje)
-		PORTB |= _BV(PORTB4);
-		_delay_ms(DELAY_MS);
-		PORTB &= ~_BV(PORTB4);
-		_delay_ms(DELAY_MS);
-		i += 1;
-		if (i % 2 == 0){ser_write(".");}
-	}
-	i = 0;
-	ser_writeln("\n\r201 Zonnescherm is uitgerold\n");
-	_delay_ms(DELAY_MS);
-}
-
-void oprollen(){
-	IN = (IN + 1);
-	OUT = (OUT + 1);
-	ser_write("250 "); //Geef aan dat het commando is gelukt
-	// Zet pin 3 uit (rode lampje)
-	PORTB &= ~_BV(PORTB3);
-	//PORTD = 0x00; //													DELETE AFTER
-	// Zet pin 5 aan (groene lampje)
-	PORTB |= _BV(PORTB5);
-	while (i < 25){
-		// Laat pin 4 knippen (gele lampje)
-		PORTB |= _BV(PORTB4);
-		_delay_ms(DELAY_MS);
-		PORTB &= ~_BV(PORTB4);
-		_delay_ms(DELAY_MS);
-		i += 1;
-	if (i % 2 == 0){ser_write(".");}
-	}
-	i = 0;
-	ser_writeln("\n\r201 Zonnescherm is opgerold\n");
-	_delay_ms(DELAY_MS);	
-}
-
-ISR(INT0_vect)
-{
-	_delay_ms(50);
-	ser_writeln("Interupt werk!");
-}
-*/
+			}
+			}
