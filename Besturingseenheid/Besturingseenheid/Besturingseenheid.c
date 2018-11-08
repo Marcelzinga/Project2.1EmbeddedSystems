@@ -19,9 +19,10 @@
 #include <string.h>
 #include "serial.h"
 #include "ADC.h"
+#include "Protocol.h"
 
-float Volt;
-float ADCRes;
+double Volt;
+double ADCRes;
 char ADCOut[24];
 
 static volatile float pulse = 0;
@@ -55,17 +56,19 @@ int main(void)
 	
 	sei(); // set external interrupt
 	  
-	//printf("An interrupt should be occuring every 5 seconds\n");
+	//printf("An interrupt should be occuring every 30 seconds\n");
 	
 	while(1){
+		protocolCom();
+		/* Afstandsensor tijdelijk stilgelegdt vanwege protocols testen
 		PORTB = (1<<PINB0); //set trigger HIGH
 		_delay_ms(500); //500 ms delay
 		PORTB &= ~(1<<PINB0); //set trigger LOW
 		
 		afstand = (pulse * 0.5) * 0.0023;
 		printf("% 6.2f cm \n", afstand);
-		//sprintf(resultAfstand, "% 6.2f", afstand);
-		//ser_write(resultAfstand); ser_writeln(" cm");
+		*/
+
 	 }	
 }
 
@@ -106,12 +109,11 @@ ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
 	
-	if(extraTime>500){
-		Volt = get_temp_adc() * 0.0048828125;
+	if(extraTime>3000){
+		Volt = getTemp() * 0.0048828125;
 		ADCRes = (Volt - 0.5) * 100;
-		itoa(ADCRes, ADCOut, 10);
+		sprintf(ADCOut, "% 6.2f", ADCRes);
 		ser_write("Temperatuur: "); ser_writeln(ADCOut);
-		printf("%i Temperatuur=%f \n", index, ADCOut);
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
 		index++;

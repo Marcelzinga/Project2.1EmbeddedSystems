@@ -37,6 +37,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../ADC.c \
 ../Besturingseenheid.c \
+../Protocol.c \
 ../serial.c
 
 
@@ -49,24 +50,28 @@ ASM_SRCS +=
 OBJS +=  \
 ADC.o \
 Besturingseenheid.o \
+Protocol.o \
 serial.o
 
 
 OBJS_AS_ARGS +=  \
 ADC.o \
 Besturingseenheid.o \
+Protocol.o \
 serial.o
 
 
 C_DEPS +=  \
 ADC.d \
 Besturingseenheid.d \
+Protocol.d \
 serial.d
 
 
 C_DEPS_AS_ARGS +=  \
 ADC.d \
 Besturingseenheid.d \
+Protocol.d \
 serial.d
 
 
@@ -79,6 +84,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 
