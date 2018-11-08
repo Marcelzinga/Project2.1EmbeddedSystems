@@ -23,7 +23,7 @@
 
 double Volt;
 double ADCRes;
-char ADCOut[24];
+
 
 static volatile float pulse = 0;
 static volatile int i = 0;
@@ -78,11 +78,11 @@ int main(void)
 	omdat wanneer ik een if else statement gebruikte het niet de 
 	gewenste resultaten toonde.
 */
-uint8_t getTemp(){
-	//uint8_t temp = ADCOut;
+double getTemp(){
 	//uint8_t temp = get_adc_value(PC2);
-	uint8_t temp = get_temp_adc();
-	return temp;
+	Volt = get_temp_adc() * 0.0048828125;
+	ADCRes = (Volt - 0.5) * 100;
+	return ADCRes;
 }
 
 uint8_t getLight(){
@@ -110,10 +110,7 @@ ISR(TIMER0_COMPA_vect){
 	extraTime++;
 	
 	if(extraTime>3000){
-		Volt = getTemp() * 0.0048828125;
-		ADCRes = (Volt - 0.5) * 100;
-		sprintf(ADCOut, "% 6.2f", ADCRes);
-		ser_write("Temperatuur: "); ser_writeln(ADCOut);
+		printf("%i temperatuur=% 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
 		index++;

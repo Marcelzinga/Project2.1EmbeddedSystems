@@ -46,13 +46,32 @@ void protocolCom(){
 				}				
 			} 
 /***********************************************************Get Temperatuur ******************************************************************/
-			if(strcmp("GET_TEMP", in_buf) == 0){
-				printf("202 LIGHT %i \n", getTemp());
+			else if(strcmp("GET_TEMP", in_buf) == 0){
+				printf("202 TEMP= % 6.2f \n", getTemp());
+				/*double ADCRes = getTemp();
+				char ADCOut[24];
+				sprintf(ADCOut, "% 6.2f", ADCRes);
+				printf("%f", ADCRes);
+				ser_write("202 TEMP: "); ser_writeln(ADCOut);*/
+			}
+			else if(strcmp("GET_GRENS_TEMP", in_buf) == 0){
+				
+			}
+			else if(strcmp("SET_GRENS_TEMP(Z)", in_buf) == 0){
+				
 			}
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/
-			if(strcmp("GET_LIGHT", in_buf) == 0){
-			printf("202 LIGHT %i \n", getLight());
+			else if(strcmp("GET_LIGHT", in_buf) == 0){
+				printf("202 LIGHT %i \n", getLight());
 			}
+			
+			else if(strcmp("GET_GRENS_LIGHT", in_buf) == 0){
+
+			}
+			else if(strcmp("SET_GRENS_LIGHT(Z)", in_buf) == 0){
+
+			}
+
 
 /*****************************************************************Exit**********************************************************************/			
 			else if(strcmp("Exit", in_buf) == 0){
@@ -64,21 +83,37 @@ void protocolCom(){
 			}
 
 /*----------------------------------------------------------------Help---------------------------------------------------------------------*/
-		else if(strcmp("Help", in_buf) == 0){
-			ser_writeln(
-			"------------------Zonnescherm------------------\n\r"
-			"Uitrollen\t\tLaat het zonnescherm uitrollen\n\r"
-			"Oprollen\t\tLaat het zonnescherm oprollen\n\n\r"
-			"-------------------Overige------------------\n\r"
-			"Help\t\t\tWeergeeft alle commando's\n\r"
-			"Exit\t\t\tSluit het programma\n"
-			);
-		}
+			else if(strcmp("Help", in_buf) == 0){
+				ser_writeln(
+				"------------------Zonnescherm------------------\n\r"
+				"UNROLL\t\tLaat het zonnescherm uitrollen\n\r"
+				"ROLLUP\t\tLaat het zonnescherm oprollen\n\n\r"
+				"STATUS"
+				"--------------------Sensors---------------------\n\r"
+				"GET_TEMP\t\tGeeft temperatuur van dat moment terug\n\n\r"
+				"GET_GRENS_TEMP"
+				"SET_GRENS_TEMP(Z)"
+				"GET_LIGHT"
+				"GET_GRENS_LIGHT"
+				"SET_GRENS_LIGHT(Z)"
+				"GET_MAX_UNROLL"
+				"SET_MAX_UNROLL(Z)"
+				"GET_MIN_UNROLL"
+				"SET_MIN_UNROLL(Z)"
+				"-------------------Information------------------\n\r"
+				"GET_NAME"
+				"SET_NAME(Z)"
+				"GET_LOCATION"
+				"SET_LOCATION(Z)"
+				"-------------------Overige------------------\n\r"
+				"Help\t\t\tWeergeeft alle commando's\n\r"
+				"Exit\t\t\tSluit het programma\n"
+				);
+			}
 /*********************************************************Commando niet gevonden************************************************************/		
-		else{
-			ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
-		}
-					
+			else{
+				ser_writeln("510 Commando niet gevonden! Type Help voor alle commando's\n");
+			}		
 }
 
 
