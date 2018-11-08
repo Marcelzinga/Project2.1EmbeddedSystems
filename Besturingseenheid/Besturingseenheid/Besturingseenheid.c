@@ -1,4 +1,15 @@
-#define F_CPU 16000000UL
+ /* HC-SR04
+ * trigger pin: (PB0) output
+ * echo pin : (PD3 = INT1) input
+ *
+ * LDR04
+ * PC2(A2) Input
+ * 
+ * Temperature sensor
+ * PC5(A5) input
+*/
+#define F_CPU 16000000
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "serial.h"
@@ -13,25 +24,51 @@ float Volt;
 float ADCRes;
 char ADCOut[24];
 
+static volatile float pulse = 0;
+static volatile int i = 0;
+double afstand = 0;
+char resultAfstand[32];
 
-volatile uint8_t i = 0;
+
+volatile int index = 0;
 volatile int extraTime = 0;
 
-int main()
+void init_ports(void){
+	DDRD = 0b11110111; //set PORTD4 as INPUT
+	DDRB = 0xFF; //set PORTB as output
+}
+
+void init_ext_int(void){
+	EICRA =(1<<ISC10); //setting interrupt triggering logic change
+	EIMSK =(1<<INT1); //enabling interrupt1
+	TCCR1A = 0;
+}
+
+int main(void)
 {
 	init_timer();
 	ser_init();
 	ADC_init();
+	
+	init_ports();
+	init_ext_int();
+	
 	sei(); // set external interrupt
 	  
-	printf("An interrupt should be occuring every 5 seconds\n");
+	//printf("An interrupt should be occuring every 5 seconds\n");
 	
 	while(1){
-		 
-	 }
-	  
-	
+		PORTB = (1<<PINB0); //set trigger HIGH
+		_delay_ms(500); //500 ms delay
+		PORTB &= ~(1<<PINB0); //set trigger LOW
+		
+		afstand = (pulse * 0.5) * 0.0023;
+		printf("% 6.2f cm \n", afstand);
+		//sprintf(resultAfstand, "% 6.2f", afstand);
+		//ser_write(resultAfstand); ser_writeln(" cm");
+	 }	
 }
+
 
 /*
 	De get temp en get light gaan nu naar twee aparte ADC getters
@@ -62,7 +99,7 @@ void init_timer (void){
 }
 
 /*
-Timerinterrupt geeft om de 1* seconden een interrupt
+Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
@@ -74,12 +111,29 @@ ISR(TIMER0_COMPA_vect){
 		ADCRes = (Volt - 0.5) * 100;
 		itoa(ADCRes, ADCOut, 10);
 		ser_write("Temperatuur: "); ser_writeln(ADCOut);
-		printf("%i Temperatuur=%f \n", i, ADCOut);
-		_delay_ms(100);
-		printf("%i intensiteit=%d\n", i, getLight());
-		i++;
+		printf("%i Temperatuur=%f \n", index, ADCOut);
+		_delay_ms(10);
+		printf("%i intensiteit=%d\n", index, getLight());
+		index++;
 		
 		// Resets de timer en de Totale timer ticks
 		extraTime = 0;
+	}
+}
+
+ISR(INT1_vect)
+{
+	if(i == 1)
+	{
+		TCCR1B = 0; //Stop counter
+		pulse = TCNT1; //Write duration (TCNT1) to pulse
+		TCNT1 = 0; //Reset duration
+		i = 0; //Reset counter
+	}
+
+	if(i==0)
+	{
+		TCCR1B |= (1<<CS10); //Start counter
+		i = 1;
 	}
 }
