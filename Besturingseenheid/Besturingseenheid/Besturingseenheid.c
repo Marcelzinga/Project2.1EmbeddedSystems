@@ -20,6 +20,8 @@
 #include "serial.h"
 #include "ADC.h"
 #include "Protocol.h"
+#include "Zonnescherm.h"
+
 
 double Volt;
 double ADCRes;
@@ -53,6 +55,7 @@ void init_ext_int(void){
 
 int main(void)
 {
+	init_scherm_ports();
 	init_timer();
 	ser_init();
 	ADC_init();
@@ -120,14 +123,15 @@ ISR(TIMER0_COMPA_vect){
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
 		
-		if(getLight()> GRENS_LIGHT)
+		if(getLight()> GRENS_LIGHT && (getOut() % 2) == 0)
 		{
 			uitrollen();
 		}
-		else{
+		if(getLight()< GRENS_LIGHT && (getIn() % 2) == 1)
+		{
 			oprollen();
-		}
-		
+		}				
+	
 		index++;
 		
 		// Resets de timer en de Totale timer ticks

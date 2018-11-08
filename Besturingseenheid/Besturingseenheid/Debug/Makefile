@@ -38,7 +38,8 @@ C_SRCS +=  \
 ../ADC.c \
 ../Besturingseenheid.c \
 ../Protocol.c \
-../serial.c
+../serial.c \
+../Zonnescherm.c
 
 
 PREPROCESSING_SRCS += 
@@ -51,28 +52,32 @@ OBJS +=  \
 ADC.o \
 Besturingseenheid.o \
 Protocol.o \
-serial.o
+serial.o \
+Zonnescherm.o
 
 
 OBJS_AS_ARGS +=  \
 ADC.o \
 Besturingseenheid.o \
 Protocol.o \
-serial.o
+serial.o \
+Zonnescherm.o
 
 
 C_DEPS +=  \
 ADC.d \
 Besturingseenheid.d \
 Protocol.d \
-serial.d
+serial.d \
+Zonnescherm.d
 
 
 C_DEPS_AS_ARGS +=  \
 ADC.d \
 Besturingseenheid.d \
 Protocol.d \
-serial.d
+serial.d \
+Zonnescherm.d
 
 
 OUTPUT_FILE_PATH +=Besturingseenheid.elf
@@ -84,6 +89,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 

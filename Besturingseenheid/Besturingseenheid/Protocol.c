@@ -6,42 +6,28 @@
 #include "serial.h"
 #include <stdlib.h>
 #include <avr/interrupt.h>
+#include "Zonnescherm.h"
 
-#define DELAY_MS 1000
-
-int i, IN, OUT = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
 
 char in_buf[30]; // Invoerbuffer
 
 void protocolCom(){
-	// set pin 3,4,5 of PORTB for output
-	DDRB |= _BV(DDB3); 
-	DDRB |= _BV(DDB4); 
-	DDRB |= _BV(DDB5); 
-	//DDRD = 0xff; //													DELETE AFTER
-	
-	//EIMSK = 1 << INT0;//													DELETE AFTER
-	EICRA |= 1 << ISC00;
-	EIFR =  1 << INTF0;
-
-	// LED op Portb5 aan = Zonnescherm opgerold (rode lampje)
-	PORTB |= _BV(PORTB5);
 	//while (1) {
 		ser_write("Wat kan ik voor u doen?");
 		ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("Uitrollen", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
-				if ((OUT % 2) == 1){
+				if ((getOut() % 2) == 1){
 					ser_writeln("Zonnescherm is al uitgerold!");
-				} if((OUT % 2) == 0){
+				} if((getOut() % 2) == 0){
 					uitrollen();
 				}				
 			}
 /*---------------------------------------------------------Zonnescherm oprollen------------------------------------------------------------*/ 
 			else if(strcmp("Oprollen", in_buf) == 0){
-				if ((IN % 2) == 0){
+				if ((getIn() % 2) == 0){
 					ser_writeln("Zonnescherm is al opgerold!");
-				} if((IN % 2) == 1){
+				} if((getIn() % 2) == 1){
 					oprollen();
 				}				
 			} 
@@ -104,7 +90,7 @@ void protocolCom(){
 
 /*****************************************************************Exit**********************************************************************/			
 			else if(strcmp("Exit", in_buf) == 0){
-				if ((OUT % 2) == 1){
+				if ((getOut() % 2) == 1){
 					uitrollen();					
 				}
 				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
@@ -145,7 +131,7 @@ void protocolCom(){
 			}		
 }
 
-
+/*
 void uitrollen(){
 	OUT = (OUT + 1);
 	IN = (IN + 1);
@@ -197,3 +183,4 @@ ISR(INT0_vect)
 	_delay_ms(50);
 	ser_writeln("Interupt werk!");
 }
+*/
