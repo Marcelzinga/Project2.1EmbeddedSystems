@@ -41,6 +41,9 @@ volatile int index = 0;
 volatile int extraTime = 0;
 volatile int extraTime1 = 0;
 
+volatile int timerVariable = 0;
+
+
 void init_ports(void){
 	DDRD = 0b11110111; //set PORTD4 as INPUT
 	DDRB = 0xFF; //set PORTB as output
@@ -56,21 +59,24 @@ int main(void)
 {
 	init_scherm_ports();
 	init_timer();
-//	init_timer2();
 	ser_init();
 	ADC_init();
 	
 	init_ports();
 	init_ext_int();
-	
 	sei(); // set external interrupt
 	  
 	//printf("An interrupt should be occuring every 30 seconds\n");
+	
 	
 	while(1){
 		protocolCom();
 	 }	
 }
+
+int get_timerVariable(){
+	return timerVariable;
+}	
 
 
 /*
@@ -117,15 +123,14 @@ Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
-	
-	extraTime++;
+	extraTime1++;
+	if(extraTime1>100){
+		timerVariable++;
+		extraTime1 = 0;
+	}
+	/*extraTime++;
 	if(extraTime>3000){
 
-		printf("%i temperatuur= % 6.2f\n", index, getTemp());
-		_delay_ms(10);
-		printf("%i intensiteit=%d\n", index, getLight());
-		
-	
 	
 		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
 		{
@@ -140,7 +145,7 @@ ISR(TIMER0_COMPA_vect){
 		
 		// Resets de timer en de Totale timer ticks
 		extraTime = 0;
-	}
+	}*/
 }
 
 ISR(INT1_vect)
@@ -159,31 +164,3 @@ ISR(INT1_vect)
 		i = 1;
 	}
 }
-
-
-/*
-void init_timer2 (void){
-	//2de timer
-	TCCR2A = (1<< WGM01); // set CTC Bit
-	OCR2A = 156.25; // Dit geeft 1/10 miliseconde
-	TIMSK2 = (1<< OCIE2A);
-	
-	TCCR2B |= (1 << CS02) | (1 <<CS00); // start at 1024 prescaler
-}
-
-//Timerinterrupt geeft om de 1* seconden een interrupt
-// https://eleccelerator.com/avr-timer-calculator/
-
-ISR(TIMER2_COMPA_vect){
-	
-	//extraTime1++;
-	//if(extraTime1 > 500){
-		PORTB = (1<<PINB0); //set trigger HIGH
-		_delay_ms(10); //10 ms delay
-		PORTB &= ~(1<<PINB0); //set trigger LOW
-		
-		afstand = (pulse * 0.5) * 0.0023;
-		
-		//extraTime1 = 0;
-	//}
-}*/

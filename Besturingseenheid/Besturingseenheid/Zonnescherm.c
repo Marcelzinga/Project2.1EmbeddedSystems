@@ -39,8 +39,8 @@ void uitrollen(){
 	
 	PORTB |= _BV(PORTB3);
 	
-	printf("Zonneschermuitrollen % 6.2f cm \n", getDistance());
-	_delay_ms(100);
+	//printf("Zonneschermuitrollen % 6.2f cm \n", getDistance());
+	
 	while (getDistance()<20){
 		// Laat pin 4 knippen (gele lampje)
 		PORTB |= _BV(PORTB4);
@@ -48,13 +48,24 @@ void uitrollen(){
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
 		j += 1;
-	if (j % 2 == 0){ser_write(".");}
+		if (j % 2 == 0){ser_write(".");}
+			
+			/*
+		// Laat pin 4 knippen (gele lampje)
+		PORTB = _BV(PORTB4);
+		if(get_timerVariable()% 2 == 0){
+			PORTB &= ~_BV(PORTB4);
+			//printf("%i", get_timerVariable());
+		}	*/		
+	}
+	j = 0;
+	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
+	ser_writeln("\n\r201 Zonnescherm is uitgerold\n");
+	_delay_ms(DELAY_MS);
 }
-j = 0;
-printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
-ser_writeln("\n\r201 Zonnescherm is uitgerold\n");
-_delay_ms(DELAY_MS);
-}
+	
+	
+
 
 void oprollen(){
 	IN = (IN + 1);
@@ -65,19 +76,20 @@ void oprollen(){
 	// Zet pin 5 aan (groene lampje)
 	PORTB |= _BV(PORTB5);
 	
-	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
-	_delay_ms(100);
-	while (getDistance()>5){
+	//printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
+	
+	while (getDistance()>get_min_unroll()){
 		// Laat pin 4 knippen (gele lampje)
 		PORTB |= _BV(PORTB4);
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
+
 		j += 1;
 		if (j % 2 == 0){ser_write(".");}
-		}			
-		j = 0;
-		printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
-		ser_writeln("\n\r201 Zonnescherm is opgerold\n");
-		_delay_ms(DELAY_MS);
-	}
+	}			
+	j = 0;
+	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
+	ser_writeln("\n\r201 Zonnescherm is opgerold\n");
+	_delay_ms(DELAY_MS);
+}

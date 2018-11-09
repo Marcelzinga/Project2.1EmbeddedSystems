@@ -13,3 +13,8 @@
 *.iml
 .idea/modules.xml
 *.xml
+TcfTransactionLog.csv
+*.xml
+*.xml
+*.iml
+GUI/.idea/GUI.iml
