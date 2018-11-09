@@ -10,4 +10,6 @@
 .o
 
 #Python
-.idea
+*.iml
+.idea/modules.xml
+*.xml
