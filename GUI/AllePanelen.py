@@ -6,8 +6,10 @@ alle_panelen.geometry("800x500+600+250")
 
 alles = Frame(alle_panelen)
 alles.pack(anchor=NW)
-tkvar = StringVar(alle_panelen)
-tkvar1 = StringVar(alle_panelen)
+tkvarT0 = StringVar(alle_panelen)
+tkvarT1 = StringVar(alle_panelen)
+tkvarL0 = StringVar(alle_panelen)
+tkvarL1 = StringVar(alle_panelen)
 #  ********************LABELS*******************
 #  ********************NAAM + INFO*******************
 alles_name = Label(alles, text="Alle panelen")
@@ -45,25 +47,25 @@ alles_temp_tijd1.grid(row=5, column=4, sticky=W)
 alles_temp_tijd1.grid_configure(padx=(15,0))
 
 #  ********************DROP DOWN MENU'S*******************
-choices_panelenP = {'Zonnescherm 1', 'Zonnescherm 2', 'Zonnescherm 3', 'Alle zonneschermen'}
-choices_panelenT = {'Zonnescherm 1', 'Zonnescherm 2', 'Zonnescherm 3', 'Alle zonneschermen'}
-tkvar.set('Alle zonneschermen')
-popupMenuP = OptionMenu(alles, tkvar, *choices_panelenP)
+choices_panelen = {'Zonnescherm 1', 'Zonnescherm 2', 'Zonnescherm 3', 'Alle zonneschermen'}
+tkvarT0.set('Alle zonneschermen')
+tkvarT1.set('Alle zonneschermen')
+popupMenuP = OptionMenu(alles, tkvarT0, *choices_panelen)
 popupMenuP.config(width=45)
 popupMenuP.grid(row=4, column=1, columnspan=3, sticky=E)
 
-choices_tijdP = {'Tijd 0', 'Tijd 1', 'Tijd 2', 'Tijd 3'}
-choices_tijdT = {'Tijd 0', 'Tijd 1', 'Tijd 2', 'Tijd 3'}
-tkvar1.set('Alle tijden')
-popupMenuT = OptionMenu(alles, tkvar1, *choices_tijdP)
+choices_tijd = {'Tijd 0', 'Tijd 1', 'Tijd 2', 'Tijd 3'}
+tkvarL0.set('Alle tijden')
+tkvarL1.set('Alle tijden')
+popupMenuT = OptionMenu(alles, tkvarL0, *choices_tijd)
 popupMenuT.config(width=45)
 popupMenuT.grid(row=5, column=1, columnspan=3, sticky=E)
 
-popupMenuP1 = OptionMenu(alles, tkvar, *choices_panelenT)
+popupMenuP1 = OptionMenu(alles, tkvarT1, *choices_panelen)
 popupMenuP1.config(width=45)
 popupMenuP1.grid(row=4, column=5, columnspan=3, sticky=E)
 
-popupMenuT1 = OptionMenu(alles, tkvar1, *choices_tijdT)
+popupMenuT1 = OptionMenu(alles, tkvarL1, *choices_tijd)
 popupMenuT1.config(width=45)
 popupMenuT1.grid(row=5, column=5, columnspan=3, sticky=E)
 
