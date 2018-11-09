@@ -96,6 +96,12 @@
     <Compile Include="Besturingseenheid.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Besturingseenheid.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="IncFile1.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Protocol.c">
       <SubType>compile</SubType>
     </Compile>

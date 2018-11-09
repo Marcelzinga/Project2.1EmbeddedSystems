@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <avr/interrupt.h>
 #include "Zonnescherm.h"
+#include "Besturingseenheid.h"
 
 
 char in_buf[30]; // Invoerbuffer
@@ -34,7 +35,7 @@ double get_min_unroll(){
 
 void protocolCom(){
 	while (1) {
-		ser_write("Wat kan ik voor u doen?");
+		ser_write("Wat kan ik voor u doen? ");
 		ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
@@ -59,11 +60,6 @@ void protocolCom(){
 /*--------------------------------------------------------Get Temperatuur -----------------------------------------------------------------*/
 			else if(strcmp("GET_TEMP", in_buf) == 0){
 				printf("202 TEMP= % 6.2f \n", getTemp());
-				/*double ADCRes = getTemp();
-				char ADCOut[24];
-				sprintf(ADCOut, "% 6.2f", ADCRes);
-				printf("%f", ADCRes);
-				ser_write("202 TEMP: "); ser_writeln(ADCOut);*/
 			}
 			else if(strcmp("GET_GRENS_TEMP", in_buf) == 0){
 				printf("202 GRENS_TEMP: % 6.2f \n", GRENS_TEMP);

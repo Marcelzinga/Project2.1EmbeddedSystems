@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "Protocol.h"
+#include "Besturingseenheid.h"
 
 
 #define DELAY_MS 1000
@@ -20,9 +21,7 @@ init_scherm_ports(){
 	DDRB |= _BV(DDB3);
 	DDRB |= _BV(DDB4);
 	DDRB |= _BV(DDB5);
-	//DDRD = 0xff; //													DELETE AFTER
 	
-	//EIMSK = 1 << INT0;//													DELETE AFTER
 	EICRA |= 1 << ISC00;
 	EIFR =  1 << INTF0;
 
@@ -35,12 +34,11 @@ void uitrollen(){
 	ser_write("250 "); //Geef aan dat het commando is gelukt
 	// Zet pin 5 uit (groene lampje)
 	PORTB &= ~_BV(PORTB5);
-	//PORTD = 0xff; //													DELETE AFTER
 	// Zet pin 3 aan (rode lampje)
 	
 	PORTB |= _BV(PORTB3);
 	
-	printf("Zonnescherm % 6.2f cm \n", getDistance());
+	printf("Zonneschermuitrollen % 6.2f cm \n", getDistance());
 	
 	while (j<25){
 		// Laat pin 4 knippen (gele lampje)
@@ -62,11 +60,10 @@ void oprollen(){
 	ser_write("250 "); //Geef aan dat het commando is gelukt
 	// Zet pin 3 uit (rode lampje)
 	PORTB &= ~_BV(PORTB3);
-	//PORTD = 0x00; //													DELETE AFTER
 	// Zet pin 5 aan (groene lampje)
 	PORTB |= _BV(PORTB5);
 	
-	printf("Zonnescherm % 6.2f cm \n", getDistance());
+	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
 	
 	while (j<25){
 		// Laat pin 4 knippen (gele lampje)

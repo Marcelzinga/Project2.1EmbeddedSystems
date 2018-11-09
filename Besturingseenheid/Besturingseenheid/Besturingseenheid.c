@@ -3,16 +3,21 @@
  * echo pin : (PD3 = INT1) input
  *
  * LDR04
- * PC2(A2) Input
+ * PC2(A2) Input + Weerstand 10 Kilo ohm
  * 
  * Temperature sensor
  * PC5(A5) input
+ *
+ *	Rode LED	PB3 +Weerstand 680 ohm
+ *	Gele LED	PB4 +Weerstand 680 ohm
+ *	Groene LED	PB5 +Weerstand 680 ohm
 */
+ 
+ 
 #define F_CPU 16000000
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "serial.h"
 #include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,10 +31,6 @@
 double Volt;
 double ADCRes;
 
-
-
-
-
 static volatile float pulse = 0;
 static volatile int i = 0;
 double afstand = 0;
@@ -38,6 +39,7 @@ char resultAfstand[32];
 
 volatile int index = 0;
 volatile int extraTime = 0;
+volatile int extraTime1 = 0;
 
 void init_ports(void){
 	DDRD = 0b11110111; //set PORTD4 as INPUT
@@ -54,6 +56,7 @@ int main(void)
 {
 	init_scherm_ports();
 	init_timer();
+	//init_timer2();
 	ser_init();
 	ADC_init();
 	
@@ -66,14 +69,13 @@ int main(void)
 	
 	while(1){
 		protocolCom();
-		
 		PORTB = (1<<PINB0); //set trigger HIGH
 		_delay_ms(500); //500 ms delay
 		PORTB &= ~(1<<PINB0); //set trigger LOW
 		
 		afstand = (pulse * 0.5) * 0.0023;
+		printf("Afstand: % 6.2f cm \n", afstand);
 		
-		//printf("% 6.2f cm \n", afstand);
 	 }	
 }
 
@@ -104,11 +106,10 @@ uint8_t getLight(){
 void init_timer (void){
 	//8bittimer
 	TCCR0A = (1<< WGM01); // set CTC Bit
-	OCR0A = 156; // Dit geeft 1/10 miliseconde
+	OCR0A = 156.25; // Dit geeft 1/10 miliseconde
 	TIMSK0 = (1<< OCIE0A);
 	
 	TCCR0B |= (1 << CS02) | (1 <<CS00); // start at 1024 prescaler
-	
 }
 
 /*
@@ -116,26 +117,24 @@ Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
-	
+
 	extraTime++;
-	
 	if(extraTime>1000){
 		printf("%i temperatuur=% 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
 		_delay_ms(10);
-		//printf("Zonnescherm: % 6.2f cm \n", afstand);
+		printf("Zonnescherm: % 6.2f cm \n", afstand);
+		printf("Zonnescherm: % 6.2f cm \n", getDistance());
 
 		_delay_ms(10);
-		printf("%d, %d, %i, %i", getLight(), get_grens_light(), getIn(), getOut());
+	
 		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
 		{
-			printf("test1");
 			uitrollen();
 		}
 		if(getLight()< get_grens_light() && (getIn() % 2) == 1)
 		{
-			printf("test2");
 			oprollen();
 		}	
 	
@@ -162,3 +161,31 @@ ISR(INT1_vect)
 		i = 1;
 	}
 }
+
+
+/*
+void init_timer2 (void){
+	//2de timer
+	TCCR2A = (1<< WGM01); // set CTC Bit
+	OCR2A = 156.25; // Dit geeft 1/10 miliseconde
+	TIMSK2 = (1<< OCIE2A);
+	
+	TCCR2B |= (1 << CS02) | (1 <<CS00); // start at 1024 prescaler
+}
+/*
+Timerinterrupt geeft om de 5* seconden een interrupt
+https://eleccelerator.com/avr-timer-calculator/
+*//*
+ISR(TIMER2_COMPA_vect){
+	
+	//extraTime1++;
+	//if(extraTime1 > 500){
+		PORTB = (1<<PINB0); //set trigger HIGH
+		_delay_ms(500); //500 ms delay
+		PORTB &= ~(1<<PINB0); //set trigger LOW
+		
+		afstand = (pulse * 0.5) * 0.0023;
+		
+		//extraTime1 = 0;
+	//}
+}*/
