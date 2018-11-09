@@ -69,8 +69,6 @@ int main(void)
 	
 	while(1){
 		protocolCom();
-			
-		
 	 }	
 }
 
@@ -121,14 +119,12 @@ https://eleccelerator.com/avr-timer-calculator/
 ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
-	if(extraTime>1500){
+	if(extraTime>3000){
 
 		printf("%i temperatuur= % 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
-		_delay_ms(10);
-		printf("Zonnescherm: % 6.2f cm \n", getDistance());
-
+		
 	
 	
 		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
