@@ -56,7 +56,7 @@ int main(void)
 {
 	init_scherm_ports();
 	init_timer();
-	//init_timer2();
+//	init_timer2();
 	ser_init();
 	ADC_init();
 	
@@ -69,12 +69,7 @@ int main(void)
 	
 	while(1){
 		protocolCom();
-		PORTB = (1<<PINB0); //set trigger HIGH
-		_delay_ms(500); //500 ms delay
-		PORTB &= ~(1<<PINB0); //set trigger LOW
-		
-		afstand = (pulse * 0.5) * 0.0023;
-		printf("Afstand: % 6.2f cm \n", afstand);
+			
 		
 	 }	
 }
@@ -87,6 +82,13 @@ int main(void)
 */
 
 double getDistance(){
+	//PORTB = (1<<PINB0); //set trigger HIGH
+	PORTB |= _BV(PORTB0);
+	_delay_ms(10); //10 ms delay
+	//PORTB &= ~(1<<PINB0); //set trigger LOW
+	PORTB &= ~_BV(PORTB0);
+	_delay_ms(100);
+	afstand = (pulse * 0.5) * 0.0023;
 	return afstand;
 }
 
@@ -117,17 +119,17 @@ Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
-
+	
 	extraTime++;
-	if(extraTime>1000){
-		printf("%i temperatuur=% 6.2f\n", index, getTemp());
+	if(extraTime>1500){
+
+		printf("%i temperatuur= % 6.2f\n", index, getTemp());
 		_delay_ms(10);
 		printf("%i intensiteit=%d\n", index, getLight());
 		_delay_ms(10);
-		printf("Zonnescherm: % 6.2f cm \n", afstand);
 		printf("Zonnescherm: % 6.2f cm \n", getDistance());
 
-		_delay_ms(10);
+	
 	
 		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
 		{
@@ -172,16 +174,16 @@ void init_timer2 (void){
 	
 	TCCR2B |= (1 << CS02) | (1 <<CS00); // start at 1024 prescaler
 }
-/*
-Timerinterrupt geeft om de 5* seconden een interrupt
-https://eleccelerator.com/avr-timer-calculator/
-*//*
+
+//Timerinterrupt geeft om de 1* seconden een interrupt
+// https://eleccelerator.com/avr-timer-calculator/
+
 ISR(TIMER2_COMPA_vect){
 	
 	//extraTime1++;
 	//if(extraTime1 > 500){
 		PORTB = (1<<PINB0); //set trigger HIGH
-		_delay_ms(500); //500 ms delay
+		_delay_ms(10); //10 ms delay
 		PORTB &= ~(1<<PINB0); //set trigger LOW
 		
 		afstand = (pulse * 0.5) * 0.0023;
