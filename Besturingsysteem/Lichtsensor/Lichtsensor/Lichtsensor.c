@@ -31,7 +31,7 @@ int main()
 	
 
 	//int a = 0;
-	printf("An interrupt should be occuring every 30 seconds\n");
+	printf("An interrupt should be occuring every 5 seconds\n");
 	while(1)
 	{
 		// Dit is alleen voor het testen. Het moet via interrupt
@@ -77,7 +77,7 @@ uint8_t get_adc_value()
 void init_timer (void){
 	//8bittimer
 	TCCR0A = (1<< WGM01); // set CTC Bit
-	OCR0A = 156; // Dit geeft 1/10 miliseconde
+	OCR0A = 312.5; // Dit geeft 1/10 miliseconde
 	TIMSK0 = (1<< OCIE0A);
 	
 	
@@ -96,7 +96,7 @@ ISR(TIMER0_COMPA_vect){
 	
 	extraTime++;
 	
-	if(extraTime>200){
+	if(extraTime>1000){
 		printf("%i intensiteit=%d\n", i, getLight());
 		i++;
 		
