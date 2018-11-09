@@ -8,3 +8,6 @@
 .srec
 .mk
 .o
+
+#Python
+.idea
