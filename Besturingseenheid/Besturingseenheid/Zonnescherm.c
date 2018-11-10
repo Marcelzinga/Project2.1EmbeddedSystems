@@ -62,7 +62,7 @@ void uitrollen(){
 		}	*/		
 	}
 	j = 0;
-	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
+	printf("999 Zonneschermoprollen % 6.2f cm \n", getDistance());
 	ser_writeln("201 Zonnescherm is uitgerold\n");
 	_delay_ms(DELAY_MS);
 }
@@ -99,7 +99,7 @@ void oprollen(){
 		if (j % 2 == 0){ser_write(".");}
 	}			
 	j = 0;
-	printf("Zonneschermoprollen % 6.2f cm \n", getDistance());
+	printf("999 Zonneschermoprollen % 6.2f cm \n", getDistance());
 	ser_writeln("201 Zonnescherm is opgerold\n");
 	_delay_ms(DELAY_MS);
 }

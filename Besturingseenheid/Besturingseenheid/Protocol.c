@@ -68,6 +68,7 @@ char* get_Versie();
 char in_buf[30]; // Invoerbuffer
 
 char *substring;
+char *temporaryget;
 
 char HANDSHAKE[10] = {'k', 'e', 'r', 's', 't', 'h', 'a', 'a', 'n', '\0'};
 
@@ -78,13 +79,14 @@ void protocolCom(){
 	int ret;
 	ret = strcmp(HANDSHAKE, in_buf);
 	if(ret |= 0){
-		ser_writeln("Sorry, wrong ID");
+		ser_writeln("504: Verkeerde ID");
 	}
 	else{
+		printf("200 kersthaan \n");
 		ser_writeln("Please enter version");
 		ser_readln(in_buf, sizeof(in_buf), 1);
 		if(strncmp("get_Versie()", in_buf, 1)){
-			ser_writeln("Wrong version");
+			ser_writeln("504 Wrong version");
 			ser_writeln(get_Versie());
 		//}
 		//else{
@@ -122,8 +124,10 @@ void protocolCom(){
 			}
 			else if(strncmp("SET_GRENS_TEMP(Z)", in_buf, 14) == 0){
 				//printf("203 GRENS_TEMP: %6.2f -> %6.2f ", grens_temperatuurRes, in_buf);
+				ser_write("203 GRENS_TEMP: "), ser_write(get_grensTemp()), ser_write(" -> ");
 				set_substring();
 				set_grensTemp(substring);
+				ser_writeln(get_grensTemp());
 				
 			}
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/

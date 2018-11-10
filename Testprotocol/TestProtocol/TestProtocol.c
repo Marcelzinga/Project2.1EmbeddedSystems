@@ -53,7 +53,7 @@ int main() {
 				}
 				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
 				abort();
-			}
+		}
 /*----------------------------------------------------------------Help---------------------------------------------------------------------*/
 		else if(strcmp("Help", in_buf) == 0){
 			ser_writeln(
