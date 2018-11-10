@@ -58,6 +58,9 @@ char maxUnrollRes[4];
 
 char in_buf[30]; // Invoerbuffer
 
+char *substring;
+
+
 
 //-----------------------Deze instellingen worden gereplaced
 double grens_temp= 25;
@@ -113,11 +116,10 @@ void protocolCom(){
 				return_grensTemp();
 				//printf("202 GRENS_TEMP: % 6.2f \n", grens_temperatuurRes);
 			}
-			else if(strcmp("SET_GRENS_TEMP(Z)", in_buf) == 0){
+			else if(strncmp("SET_GRENS_TEMP(Z)", in_buf, 14) == 0){
 				//printf("203 GRENS_TEMP: %6.2f -> %6.2f ", grens_temperatuurRes, in_buf);
-				ser_writeln("600 Zet de temperatuur grenswaarde van uw zonnepaneel");
-				ser_readln(grens_temperatuur, sizeof(grens_temperatuur), 1);
-				set_grensTemp(grens_temperatuur);
+				set_substring();
+				set_grensTemp(substring);
 				
 			}
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/
@@ -129,71 +131,62 @@ void protocolCom(){
 				//printf("202 GRENS_LIGHT: % 6.2f \n", grens_lichtint);
 				return_grensLicht();
 			}
-			else if(strcmp("SET_GRENS_LIGHT(Z)", in_buf) == 0){
+			else if(strncmp("SET_GRENS_LIGHT(Z)", in_buf, 15) == 0){
 				//printf("203 GRENS_LIGHT: %6.2f -> %6.2f ", grens_lichtintRes, in_buf);
-				ser_writeln("600 Zet de lichtintensiteit grenswaarde van uw zonnepaneel");
-				ser_readln(grens_lichtint, sizeof(grens_lichtint), 1);
-				set_grensLicht(grens_lichtint);
+				set_substring();
+				set_grensLicht(substring);
 			}
 /*----------------------------------------------------------Afstandsensor---------------------------------------------------------------------*/
 			else if(strcmp("GET_MAX_UNROLL", in_buf) == 0){
 				//printf("202 MAX_UNROLL= % 6.2f \n", max_unroll);
 				return_maxUnroll();
 			}
-			else if(strcmp("SET_MAX_UNROLL(Z)", in_buf) == 0){
+			else if(strncmp("SET_MAX_UNROLL(Z)", in_buf, 15) == 0){
 				//printf("203 MAX_UNROLL: %6.2f -> %6.2f ", maxUnrollRes, in_buf);G
-				ser_writeln("600 Zet tot hoever de scherm kan inrollen in (cm)");
-				ser_readln(maxUnroll, sizeof(maxUnroll), 1);
-				set_maxUnroll(maxUnroll);
+				set_substring();
+				set_maxUnroll(substring);
 			}
 			else if(strcmp("GET_MIN_UNROLL", in_buf) == 0){
 				//printf("202 MIN_UNROLL= % 6.2f \n", minUnrollRes);
 				return_minUnroll();
 				
 			}
-			else if(strcmp("SET_MIN_UNROLL(Z)", in_buf) == 0){
+			else if(strncmp("SET_MIN_UNROLL(Z)", in_buf, 15) == 0){
 				//printf("203 MIN_UNROLL: %6.2f -> %6.2f ", minUnrollRes, in_buf);
-				ser_writeln("600 Zet tot hoever de scherm kan inrollen in (cm)");
-				ser_readln(minUnroll, sizeof(minUnroll), 1);
-				set_minUnroll(minUnroll);
+				set_substring();
+				set_minUnroll(substring);
 			}
 /*----------------------------------------------------------Information---------------------------------------------------------------------*/
 			else if(strcmp("GET_NAME", in_buf) == 0){
 				return_Naam();
 			}
-			else if(strcmp("SET_NAME(Z)", in_buf) == 0){
 				
-				ser_writeln("600 Zet de naam van uw zonnescherm");
-				ser_readln(naam, sizeof(naam), 1);
-				set_Naam(naam);
-				
-				printf("200 OK ");
+			else if(strncmp("SET_NAME(Z)", in_buf, 8) == 0){
+				set_substring();
+				set_Naam(substring);
+				printf("200 OK \n");
 			}
 			
 			else if(strcmp("GET_LOCATION", in_buf) == 0){
 				//printf("202 NAME %s", locatieRes);
 				return_Locatie();
 			}
-			else if(strcmp("SET_LOCATION(Z)", in_buf) == 0){
+			else if(strncmp("SET_LOCATION(Z)", in_buf, 12) == 0){
+				set_substring();
+				set_Locatie(substring);
 				
-				ser_writeln("600 Zet de locatie van uw zonnescherm");
-				ser_readln(locatie, sizeof(locatie), 1);
-				set_Locatie(locatie);
-				
-				printf("200 OK ");
+				printf("200 OK \n");
 			}
 			
 				else if(strcmp("GET_VERSION", in_buf) == 0){
 					//printf("202 NAME %s", versieRes);
 					return_Versie();
 				}
-				else if(strcmp("SET_VERSION(Z)", in_buf) == 0){
+				else if(strncmp("SET_VERSION(Z)", in_buf, 12) == 0){
+					set_substring();
+					set_Versie(substring);
 					
-					ser_writeln("600 Zet de versie van uw zonnepaneel");
-					ser_readln(versie, sizeof(versie), 1);
-					set_Versie(versie);
-					
-					printf("200 OK ");
+					printf("200 OK \n");
 				}
 
 /*****************************************************************Exit**********************************************************************/			
@@ -243,6 +236,12 @@ void protocolCom(){
 			
 			
 	//________________________________________________________________________________________//
+	
+	 void set_substring(){
+			char * p1 = strstr (in_buf, "(");
+			p1[strlen(p1) -1] = '\0';
+			substring = p1 +1;
+		}
 	//Zetten van naam.
 	void set_Naam(char* n){
 		for (int teller = locNaam; teller <= grensTellerNaam; teller++){
@@ -316,7 +315,7 @@ void protocolCom(){
 		for (int teller = locLicht; (teller - locLicht) <= grensTellerLicht; teller++){
 			grens_lichtintRes[teller - locLicht] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 licht_TEMP:" ), ser_writeln(grens_lichtintRes);
+		ser_write("202 GRENS_LIGHT:" ), ser_writeln(grens_lichtintRes);
 	}
 
 	//Zetten van de maximale inrol.

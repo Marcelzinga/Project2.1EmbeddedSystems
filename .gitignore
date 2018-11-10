@@ -18,3 +18,5 @@ TcfTransactionLog.csv
 *.xml
 *.iml
 GUI/.idea/GUI.iml
+Besturingseenheid/Besturingseenheid/Instellingen.c
+Besturingseenheid/Besturingseenheid/Instellingen.h
