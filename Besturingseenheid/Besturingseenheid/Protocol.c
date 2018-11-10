@@ -54,6 +54,21 @@ char minUnrollRes[4];
 char maxUnroll[4];
 char maxUnrollRes[4];
 
+char get_grens_light(){
+	for (int teller = locLicht; (teller - locLicht) <= grensTellerLicht; teller++){
+		grens_lichtintRes[teller - locLicht] = eeprom_read_byte((uint8_t*)teller);
+	}
+	ser_writeln(grens_lichtintRes);
+	return grens_lichtint;
+}
+
+char* get_grensLight();
+char* get_grensTemp();
+char* get_minUnroll();
+char* get_maxUnroll();
+char* get_Naam();
+char* get_Locatie();
+char* get_Versie();
 
 
 char in_buf[30]; // Invoerbuffer
@@ -68,11 +83,12 @@ uint8_t grens_light = 180;
 double max_unroll= 20;
 double min_unroll= 4;
 
-uint8_t get_grens_light(){
+/*uint8_t get_grens_light(){
 	return grens_light;
-}	
+}	*/
 
 double get_grens_temp(){
+
 	return grens_temp;
 }
 
@@ -113,8 +129,8 @@ void protocolCom(){
 			
 			}
 			else if(strcmp("GET_GRENS_TEMP", in_buf) == 0){
-				return_grensTemp();
 				//printf("202 GRENS_TEMP: % 6.2f \n", grens_temperatuurRes);
+				ser_write("202 GRENS_TEMP:" ), ser_writeln(get_grensTemp());
 			}
 			else if(strncmp("SET_GRENS_TEMP(Z)", in_buf, 14) == 0){
 				//printf("203 GRENS_TEMP: %6.2f -> %6.2f ", grens_temperatuurRes, in_buf);
@@ -129,7 +145,8 @@ void protocolCom(){
 			
 			else if(strcmp("GET_GRENS_LIGHT", in_buf) == 0){
 				//printf("202 GRENS_LIGHT: % 6.2f \n", grens_lichtint);
-				return_grensLicht();
+				ser_write("202 GRENS_LIGHT:" ), ser_write(get_grensLight());
+				
 			}
 			else if(strncmp("SET_GRENS_LIGHT(Z)", in_buf, 15) == 0){
 				//printf("203 GRENS_LIGHT: %6.2f -> %6.2f ", grens_lichtintRes, in_buf);
@@ -139,7 +156,7 @@ void protocolCom(){
 /*----------------------------------------------------------Afstandsensor---------------------------------------------------------------------*/
 			else if(strcmp("GET_MAX_UNROLL", in_buf) == 0){
 				//printf("202 MAX_UNROLL= % 6.2f \n", max_unroll);
-				return_maxUnroll();
+				ser_write("203 MAX_UNROLL: "), ser_writeln(get_maxUnroll());
 			}
 			else if(strncmp("SET_MAX_UNROLL(Z)", in_buf, 15) == 0){
 				//printf("203 MAX_UNROLL: %6.2f -> %6.2f ", maxUnrollRes, in_buf);G
@@ -148,7 +165,7 @@ void protocolCom(){
 			}
 			else if(strcmp("GET_MIN_UNROLL", in_buf) == 0){
 				//printf("202 MIN_UNROLL= % 6.2f \n", minUnrollRes);
-				return_minUnroll();
+				ser_write("203 MIN_UNROLL: "), ser_writeln(get_minUnroll());
 				
 			}
 			else if(strncmp("SET_MIN_UNROLL(Z)", in_buf, 15) == 0){
@@ -158,7 +175,7 @@ void protocolCom(){
 			}
 /*----------------------------------------------------------Information---------------------------------------------------------------------*/
 			else if(strcmp("GET_NAME", in_buf) == 0){
-				return_Naam();
+				ser_write("202 "),  ser_writeln(get_Naam());
 			}
 				
 			else if(strncmp("SET_NAME(Z)", in_buf, 8) == 0){
@@ -169,7 +186,7 @@ void protocolCom(){
 			
 			else if(strcmp("GET_LOCATION", in_buf) == 0){
 				//printf("202 NAME %s", locatieRes);
-				return_Locatie();
+				ser_write("202 "), ser_writeln(get_Locatie());
 			}
 			else if(strncmp("SET_LOCATION(Z)", in_buf, 12) == 0){
 				set_substring();
@@ -180,7 +197,7 @@ void protocolCom(){
 			
 				else if(strcmp("GET_VERSION", in_buf) == 0){
 					//printf("202 NAME %s", versieRes);
-					return_Versie();
+					ser_write("202 versie: "), ser_writeln(get_Versie());
 				}
 				else if(strncmp("SET_VERSION(Z)", in_buf, 12) == 0){
 					set_substring();
@@ -250,11 +267,11 @@ void protocolCom(){
 	}
 
 	//Retourneren van naam
-	void return_Naam(){
+	char* get_Naam(){
 		for (int teller = locNaam; teller <= grensTellerNaam; teller++){
 			naamRes[teller] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 "),  ser_writeln(naamRes);
+		return naamRes;
 	}
 
 	//Zetten van locatie.
@@ -265,11 +282,11 @@ void protocolCom(){
 	}
 
 	//Retourneren van locatie.
-	void return_Locatie(){
+	char* get_Locatie(){
 		for (int teller = locLocatie; (teller - locLocatie) <= grensTellerLocatie; teller++){
 			locatieRes[teller - locLocatie] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 "), ser_writeln(locatieRes);
+		return locatieRes;
 	}
 
 	//Zetten van versienummer.
@@ -280,11 +297,11 @@ void protocolCom(){
 	}
 
 	//Retourneren versie nummer.
-	void return_Versie(void){
+	char* get_Versie(){
 		for (int teller = locVersie; (teller - locVersie) <= grensTellerVersie; teller++){
 			versieRes[teller - locVersie] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 versie: "), ser_writeln(versieRes);
+		return versieRes;
 	}
 
 	//Zetten van grens_temperatuur grenswaarde.
@@ -295,11 +312,12 @@ void protocolCom(){
 	}
 
 	//Retourneren van grenswaarde grens_temperatuur.
-	void return_grensTemp(void){
+	char* get_grensTemp(){
 		for (int teller = locTemp; (teller - locTemp) <= grensTellerTemp; teller++){
 			grens_temperatuurRes[teller - locTemp] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 GRENS_TEMP:" ), ser_writeln(grens_temperatuurRes);
+		//ser_write("202 GRENS_TEMP:" ), ser_writeln(grens_temperatuurRes);
+		return grens_temperatuurRes;
 	}
 
 	//Zetten van grens_lichtintensiteit grenswaarde.
@@ -311,11 +329,12 @@ void protocolCom(){
 
 
 	//Retourneren van grenswaarde grens_lichtintensiteit.
-	void return_grensLicht(void){
+	char* get_grensLight(){
 		for (int teller = locLicht; (teller - locLicht) <= grensTellerLicht; teller++){
 			grens_lichtintRes[teller - locLicht] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("202 GRENS_LIGHT:" ), ser_writeln(grens_lichtintRes);
+		//ser_write("202 GRENS_LIGHT:" ), ser_writeln(grens_lichtintRes);
+		return grens_lichtintRes;
 	}
 
 	//Zetten van de maximale inrol.
@@ -328,11 +347,11 @@ void protocolCom(){
 
 
 	//Retourneren van de maximale inrol waarde.
-	void return_minUnroll(void){
+	char* get_minUnroll(){
 		for (int teller = locminUnroll; (teller - locminUnroll) <= grensTellerminUnroll; teller++){
 			minUnrollRes[teller - locminUnroll] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("203, MIN_UNROLL: "), ser_writeln(minUnrollRes);
+		return minUnrollRes;
 	}
 
 	//Zetten van de maximale uitrol.
@@ -344,9 +363,9 @@ void protocolCom(){
 
 
 	//Retourneren van de maximale uitrol waarde.
-	void return_maxUnroll(void){
+	char* get_maxUnroll(){
 		for (int teller = locmaxUnroll; (teller - locmaxUnroll) <= grensTellermaxUnroll; teller++){
 			maxUnrollRes[teller - locmaxUnroll] = eeprom_read_byte((uint8_t*)teller);
 		}
-		ser_write("203 MAX_UNROLL: "), ser_writeln(maxUnrollRes);
+		return maxUnrollRes;
 	}	

@@ -128,10 +128,11 @@ ISR(TIMER0_COMPA_vect){
 		timerVariable++;
 		extraTime1 = 0;
 	}
-	/*extraTime++;
-	if(extraTime>3000){
-
-	
+	extraTime++;
+	if(extraTime>1000){
+		/*printf("lichtintensiteit = %s", get_grens_light());
+		ser_writeln(get_grens_light());
+		/*
 		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
 		{
 			uitrollen();
@@ -143,9 +144,9 @@ ISR(TIMER0_COMPA_vect){
 	
 		index++;
 		
-		// Resets de timer en de Totale timer ticks
+		// Resets de timer en de Totale timer ticks*/
 		extraTime = 0;
-	}*/
+	}
 }
 
 ISR(INT1_vect)
