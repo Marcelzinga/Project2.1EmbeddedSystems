@@ -69,17 +69,33 @@ char in_buf[30]; // Invoerbuffer
 
 char *substring;
 
+char HANDSHAKE[10] = {'k', 'e', 'r', 's', 't', 'h', 'a', 'a', 'n', '\0'};
 
-//---------------------------
+// De handshakeprocedure is niet compleet. Wanneer 
 void protocolCom(){
-	while (1) {
-		ser_write("Wat kan ik voor u doen? ");
+	ser_write("Please enter ID");
+	ser_readln(in_buf, sizeof(in_buf), 1);
+	int ret;
+	ret = strcmp(HANDSHAKE, in_buf);
+	if(ret |= 0){
+		ser_writeln("Sorry, wrong ID");
+	}
+	else{
+		ser_writeln("Please enter version");
 		ser_readln(in_buf, sizeof(in_buf), 1);
+		if(strncmp("get_Versie()", in_buf, 1)){
+			ser_writeln("Wrong version");
+			ser_writeln(get_Versie());
+		//}
+		//else{
+			while (1) {
+				ser_write("Wat kan ik voor u doen? ");
+				ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
-				if ((getOut() % 2) == 1){
+				if ((getIn() % 2) == 1){
 					ser_writeln("999 Zonnescherm is al uitgerold!");
-				} if((getOut() % 2) == 0){
+				} if((getIn() % 2) == 0){
 					uitrollen();
 				}				
 			}
@@ -117,7 +133,7 @@ void protocolCom(){
 			
 			else if(strcmp("GET_GRENS_LIGHT", in_buf) == 0){
 				//printf("202 GRENS_LIGHT: % 6.2f \n", grens_lichtint);
-				ser_write("202 GRENS_LIGHT:" ), ser_write(get_grensLight());
+				ser_write("202 GRENS_LIGHT:" ), ser_writeln(get_grensLight());
 				
 			}
 			else if(strncmp("SET_GRENS_LIGHT(Z)", in_buf, 15) == 0){
@@ -180,7 +196,7 @@ void protocolCom(){
 
 /*****************************************************************Exit**********************************************************************/			
 			else if(strcmp("Exit", in_buf) == 0){
-				if ((getOut() % 2) == 1){
+				if ((getIn() % 2) == 1){
 					uitrollen();					
 				}
 				ser_writeln("221 Bye!"); //Groeting wanneer je het programma sluit
@@ -222,7 +238,8 @@ void protocolCom(){
 			}		
 			}
 			}
-			
+			}	
+			}					
 			
 
 //_______________________________________________________________________________________________//

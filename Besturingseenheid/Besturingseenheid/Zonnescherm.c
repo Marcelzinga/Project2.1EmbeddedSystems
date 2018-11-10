@@ -7,7 +7,7 @@
 
 #define DELAY_MS 1000
 
-int j, IN, OUT = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
+int j, IN = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
 
 
 
@@ -15,9 +15,6 @@ int getIn(){
 	return IN;
 }
 
-int getOut(){
-	return OUT;
-}
 
 init_scherm_ports(){
 	// set pin 3,4,5 of PORTB for output
@@ -33,7 +30,6 @@ init_scherm_ports(){
 }
 
 void uitrollen(){
-	OUT = (OUT + 1);
 	IN = (IN + 1);
 	ser_write("250 "); //Geef aan dat het commando is gelukt
 	// Zet pin 5 uit (groene lampje)
@@ -76,7 +72,6 @@ void uitrollen(){
 
 void oprollen(){
 	IN = (IN + 1);
-	OUT = (OUT + 1);
 	
 	ser_write("250 "); //Geef aan dat het commando is gelukt
 	// Zet pin 3 uit (rode lampje)
@@ -85,6 +80,7 @@ void oprollen(){
 	PORTB |= _BV(PORTB5);
 	
 	// Converteer de char* naar een double
+
 	char* c = get_minUnroll();
 	double x;
 	x = strtod(c, NULL);
@@ -96,6 +92,8 @@ void oprollen(){
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
+		printf("% 6.2f", x);
+		printf("% 6.2f", getDistance());
 
 		j += 1;
 		if (j % 2 == 0){ser_write(".");}

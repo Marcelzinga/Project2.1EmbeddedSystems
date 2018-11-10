@@ -1,5 +1,4 @@
 int getIn();
-int getOut();
 void uitrollen();
 void oprollen();
 

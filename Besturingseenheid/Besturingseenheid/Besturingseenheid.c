@@ -37,7 +37,7 @@ double afstand = 0;
 char resultAfstand[32];
 
 
-volatile int index = 0;
+
 volatile int extraTime = 0;
 volatile int extraTime1 = 0;
 
@@ -130,7 +130,7 @@ ISR(TIMER0_COMPA_vect){
 	}
 	extraTime++;
 	if(extraTime>6000){
-		/*
+		
 		char* l = get_grensLight();
 		double grenslight;
 		grenslight = strtod(l, NULL);
@@ -138,8 +138,11 @@ ISR(TIMER0_COMPA_vect){
 		char* t = get_grensTemp();
 		double grenstemp;
 		grenstemp = strtod(t, NULL);
+		printf("% 6.2f, % 6.2f", grenstemp, getTemp());
+		printf("% 6.2f, %i", grenslight, getLight());
+
 		
-		if(getLight()> grenslight && getTemp() > grenstemp && (getOut() % 2) == 0)
+		if(getLight()> grenslight && getTemp() > grenstemp && (getIn() % 2) == 0)
 		{
 			uitrollen();
 		}
@@ -147,8 +150,6 @@ ISR(TIMER0_COMPA_vect){
 		{
 			oprollen();
 		}	
-	
-		index++;
 		
 		// Resets de timer en de Totale timer ticks*/
 		extraTime = 0;
