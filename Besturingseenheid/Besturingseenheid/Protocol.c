@@ -10,6 +10,7 @@
 #include "Zonnescherm.h"
 #include "Besturingseenheid.h"
 
+
 int teller;
 
 //Hoevaak de "for-loop" uitgevoerd wordt.
@@ -54,14 +55,7 @@ char minUnrollRes[4];
 char maxUnroll[4];
 char maxUnrollRes[4];
 
-char get_grens_light(){
-	for (int teller = locLicht; (teller - locLicht) <= grensTellerLicht; teller++){
-		grens_lichtintRes[teller - locLicht] = eeprom_read_byte((uint8_t*)teller);
-	}
-	ser_writeln(grens_lichtintRes);
-	return grens_lichtint;
-}
-
+// Prototypes
 char* get_grensLight();
 char* get_grensTemp();
 char* get_minUnroll();
@@ -76,28 +70,6 @@ char in_buf[30]; // Invoerbuffer
 char *substring;
 
 
-
-//-----------------------Deze instellingen worden gereplaced
-double grens_temp= 25;
-uint8_t grens_light = 180;
-double max_unroll= 20;
-double min_unroll= 4;
-
-/*uint8_t get_grens_light(){
-	return grens_light;
-}	*/
-
-double get_grens_temp(){
-
-	return grens_temp;
-}
-
-double get_max_unroll(){
-	return max_unroll;
-}
-double get_min_unroll(){
-	return min_unroll;
-}
 //---------------------------
 void protocolCom(){
 	while (1) {
@@ -121,7 +93,7 @@ void protocolCom(){
 			} 
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("STATUS", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
-
+			
 			}
 /*--------------------------------------------------------Get Temperatuur -----------------------------------------------------------------*/
 			else if(strcmp("GET_TEMP", in_buf) == 0){
@@ -252,13 +224,15 @@ void protocolCom(){
 			}
 			
 			
-	//________________________________________________________________________________________//
+
+//_______________________________________________________________________________________________//
 	
 	 void set_substring(){
 			char * p1 = strstr (in_buf, "(");
 			p1[strlen(p1) -1] = '\0';
 			substring = p1 +1;
 		}
+		
 	//Zetten van naam.
 	void set_Naam(char* n){
 		for (int teller = locNaam; teller <= grensTellerNaam; teller++){

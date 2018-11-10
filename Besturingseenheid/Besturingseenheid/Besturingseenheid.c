@@ -129,15 +129,21 @@ ISR(TIMER0_COMPA_vect){
 		extraTime1 = 0;
 	}
 	extraTime++;
-	if(extraTime>1000){
-		/*printf("lichtintensiteit = %s", get_grens_light());
-		ser_writeln(get_grens_light());
+	if(extraTime>6000){
 		/*
-		if(getLight()> get_grens_light() && (getOut() % 2) == 0)
+		char* l = get_grensLight();
+		double grenslight;
+		grenslight = strtod(l, NULL);
+		
+		char* t = get_grensTemp();
+		double grenstemp;
+		grenstemp = strtod(t, NULL);
+		
+		if(getLight()> grenslight && getTemp() > grenstemp && (getOut() % 2) == 0)
 		{
 			uitrollen();
 		}
-		if(getLight()< get_grens_light() && (getIn() % 2) == 1)
+		if(getLight()< grenslight && getTemp() < grenstemp && (getIn() % 2) == 1)
 		{
 			oprollen();
 		}	
