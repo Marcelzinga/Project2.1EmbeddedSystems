@@ -33,7 +33,7 @@ double ADCRes;
 
 static volatile float pulse = 0;
 static volatile int i = 0;
-double afstand = 0;
+double afstand = 10;
 char resultAfstand[32];
 
 
@@ -82,10 +82,11 @@ int get_timerVariable(){
 /*
 	De get temp en get light gaan nu naar twee aparte ADC getters
 	omdat wanneer ik een if else statement gebruikte het niet de 
-	gewenste resultaten toonde.
+	gewenste resultaten toonde.GET
 */
 
 double getDistance(){
+	sei();
 	//PORTB = (1<<PINB0); //set trigger HIGH
 	PORTB |= _BV(PORTB0);
 	_delay_ms(10); //10 ms delay
@@ -123,14 +124,15 @@ Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
+	//sei();
+	
 	extraTime1++;
 	if(extraTime1>100){
 		timerVariable++;
 		extraTime1 = 0;
 	}
 	extraTime++;
-	if(extraTime>6000){
-		
+	if(extraTime>1000){
 		char* l = get_grensLight();
 		double grenslight;
 		grenslight = strtod(l, NULL);
@@ -141,13 +143,20 @@ ISR(TIMER0_COMPA_vect){
 		printf("% 6.2f, % 6.2f", grenstemp, getTemp());
 		printf("% 6.2f, %i", grenslight, getLight());
 
+		// Als het boven de grenslight is, en boven de grenstemperatuur is,
+		// en ingerold dan moet het uitrollen
 		
 		if(getLight()> grenslight && getTemp() > grenstemp && (getIn() % 2) == 0)
 		{
+			//sei();
 			uitrollen();
 		}
+		
+		// Als het onder de grenslight is, en boven de grenstemperatuur is,
+		// en uitgerold is. Dan moet het inrollen.
 		if(getLight()< grenslight && getTemp() < grenstemp && (getIn() % 2) == 1)
 		{
+			//sei();
 			oprollen();
 		}	
 		
@@ -156,6 +165,8 @@ ISR(TIMER0_COMPA_vect){
 	}
 }
 
+
+// Voor de afstandsensor
 ISR(INT1_vect)
 {
 	if(i == 1)

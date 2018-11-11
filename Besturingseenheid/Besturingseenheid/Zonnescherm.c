@@ -31,7 +31,7 @@ init_scherm_ports(){
 
 void uitrollen(){
 	IN = (IN + 1);
-	ser_write("250 "); //Geef aan dat het commando is gelukt
+	ser_write("250 \n"); //Geef aan dat het commando is gelukt
 	// Zet pin 5 uit (groene lampje)
 	PORTB &= ~_BV(PORTB5);
 	// Zet pin 3 aan (rode lampje)
@@ -84,20 +84,17 @@ void oprollen(){
 	char* c = get_minUnroll();
 	double x;
 	x = strtod(c, NULL);
-	
 	while (getDistance()> x){
-
 		// Laat pin 4 knippen (gele lampje)
 		PORTB |= _BV(PORTB4);
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
-		printf("% 6.2f", x);
-		printf("% 6.2f", getDistance());
 
 		j += 1;
 		if (j % 2 == 0){ser_write(".");}
-	}			
+	}		
+	ser_writeln();
 	j = 0;
 	printf("999 Zonneschermoprollen % 6.2f cm \n", getDistance());
 	ser_writeln("201 Zonnescherm is opgerold\n");
