@@ -92,7 +92,7 @@ double getDistance(){
 	_delay_ms(10); //10 ms delay
 	//PORTB &= ~(1<<PINB0); //set trigger LOW
 	PORTB &= ~_BV(PORTB0);
-	_delay_ms(100);
+	_delay_ms(10);
 	afstand = (pulse * 0.5) * 0.0023;
 	return afstand;
 }
