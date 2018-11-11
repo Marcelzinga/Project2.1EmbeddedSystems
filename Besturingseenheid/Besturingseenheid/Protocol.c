@@ -31,7 +31,7 @@ char HANDSHAKE[10] = {'k', 'e', 'r', 's', 't', 'h', 'a', 'a', 'n', '\0'};
 
 // De handshakeprocedure is niet compleet. Wanneer 
 void protocolCom(){
-	ser_write("Please enter ID");
+	ser_write("201 Please enter ID");
 	ser_readln(in_buf, sizeof(in_buf), 1);
 	int ret;
 	ret = strcmp(HANDSHAKE, in_buf);
@@ -39,8 +39,7 @@ void protocolCom(){
 		ser_writeln("504: Verkeerde ID");
 	}
 	else{
-		printf("200 kersthaan \n");
-		ser_writeln("Please enter version");
+		printf("201: kersthaan Please enter version");
 		ser_readln(in_buf, sizeof(in_buf), 1);
 		char* c = get_Versie();
 		double x;
@@ -50,7 +49,7 @@ void protocolCom(){
 		}
 		else{
 			while (1) {
-				ser_write("Wat kan ik voor u doen? ");
+				ser_write("200 Wat kan ik voor u doen? ");
 				ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
