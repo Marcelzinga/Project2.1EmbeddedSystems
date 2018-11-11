@@ -17,7 +17,7 @@ int get_unrollStatus(){
 }
 
 
-init_scherm_ports(){
+void init_scherm_ports(){
 	// set pin 3,4,5 of PORTB for output
 	DDRB |= _BV(DDB3);
 	DDRB |= _BV(DDB4);

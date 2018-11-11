@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   5 .debug_aranges 00000240  00000000  00000000  000067c8  2**3
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000270a  00000000  00000000  00006a08  2**0
+  6 .debug_info   00002706  00000000  00000000  00006a08  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000dd1  00000000  00000000  00009112  2**0
+  7 .debug_abbrev 00000de4  00000000  00000000  0000910e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000015fb  00000000  00000000  00009ee3  2**0
+  8 .debug_line   000015fb  00000000  00000000  00009ef2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000718  00000000  00000000  0000b4e0  2**2
+  9 .debug_frame  00000718  00000000  00000000  0000b4f0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000873  00000000  00000000  0000bbf8  2**0
+ 10 .debug_str    00000873  00000000  00000000  0000bc08  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00001d12  00000000  00000000  0000c46b  2**0
+ 11 .debug_loc    00001d12  00000000  00000000  0000c47b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000068  00000000  00000000  0000e17d  2**0
+ 12 .debug_ranges 00000068  00000000  00000000  0000e18d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2484,7 +2484,7 @@ int get_unrollStatus(){
 000010ca <init_scherm_ports>:
 
 
-init_scherm_ports(){
+void init_scherm_ports(){
 	// set pin 3,4,5 of PORTB for output
 	DDRB |= _BV(DDB3);
     10ca:	23 9a       	sbi	0x04, 3	; 4
