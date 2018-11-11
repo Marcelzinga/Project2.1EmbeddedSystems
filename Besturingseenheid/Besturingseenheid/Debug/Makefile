@@ -37,6 +37,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../ADC.c \
 ../Besturingseenheid.c \
+../Instellingen.c \
 ../Protocol.c \
 ../serial.c \
 ../Zonnescherm.c
@@ -51,6 +52,7 @@ ASM_SRCS +=
 OBJS +=  \
 ADC.o \
 Besturingseenheid.o \
+Instellingen.o \
 Protocol.o \
 serial.o \
 Zonnescherm.o
@@ -59,6 +61,7 @@ Zonnescherm.o
 OBJS_AS_ARGS +=  \
 ADC.o \
 Besturingseenheid.o \
+Instellingen.o \
 Protocol.o \
 serial.o \
 Zonnescherm.o
@@ -67,6 +70,7 @@ Zonnescherm.o
 C_DEPS +=  \
 ADC.d \
 Besturingseenheid.d \
+Instellingen.d \
 Protocol.d \
 serial.d \
 Zonnescherm.d
@@ -75,6 +79,7 @@ Zonnescherm.d
 C_DEPS_AS_ARGS +=  \
 ADC.d \
 Besturingseenheid.d \
+Instellingen.d \
 Protocol.d \
 serial.d \
 Zonnescherm.d
@@ -89,6 +94,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 

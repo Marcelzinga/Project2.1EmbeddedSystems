@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "Protocol.h"
+#include "Instellingen.h"
 #include "Besturingseenheid.h"
 #include <stdlib.h>
 
@@ -11,7 +12,7 @@ int j, IN = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgero
 
 
 
-int getIn(){
+int get_unrollStatus(){
 	return IN;
 }
 
@@ -50,8 +51,12 @@ void uitrollen(){
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
-		j += 1;
-		if (j % 2 == 0){ser_write(".");}
+		
+			
+			
+		//printf("% 6.2f", getDistance());
+		//printf("% 6.2f", x);
+			
 			
 			/*
 		// Laat pin 4 knippen (gele lampje)
@@ -59,12 +64,15 @@ void uitrollen(){
 		if(get_timerVariable()% 2 == 0){
 			PORTB &= ~_BV(PORTB4);
 			//printf("%i", get_timerVariable());
-		}	*/		
+		}	
+		*/	
+			
+		//j += 1;
+		//if (j % 2 == 0){ser_write(".");}
 	}
-	j = 0;
+	//j = 0;
 	printf("999 Zonneschermoprollen % 6.2f cm \n", getDistance());
 	ser_writeln("201 Zonnescherm is uitgerold\n");
-	_delay_ms(DELAY_MS);
 }
 	
 	
@@ -90,13 +98,15 @@ void oprollen(){
 		_delay_ms(DELAY_MS);
 		PORTB &= ~_BV(PORTB4);
 		_delay_ms(DELAY_MS);
+		
+		//printf("% 6.2f", getDistance());
+		//printf("% 6.2f", x);
 
-		j += 1;
-		if (j % 2 == 0){ser_write(".");}
+		//j += 1;
+		//if (j % 2 == 0){ser_write(".");}
 	}		
 	ser_writeln();
-	j = 0;
+	//j = 0;
 	printf("999 Zonneschermoprollen % 6.2f cm \n", getDistance());
 	ser_writeln("201 Zonnescherm is opgerold\n");
-	_delay_ms(DELAY_MS);
 }

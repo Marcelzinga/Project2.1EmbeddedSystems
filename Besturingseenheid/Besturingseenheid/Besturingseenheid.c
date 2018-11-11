@@ -132,7 +132,8 @@ ISR(TIMER0_COMPA_vect){
 		extraTime1 = 0;
 	}
 	extraTime++;
-	if(extraTime>1000){
+	/*
+	if(extraTime>3000){
 		char* l = get_grensLight();
 		double grenslight;
 		grenslight = strtod(l, NULL);
@@ -146,7 +147,7 @@ ISR(TIMER0_COMPA_vect){
 		// Als het boven de grenslight is, en boven de grenstemperatuur is,
 		// en ingerold dan moet het uitrollen
 		
-		if(getLight()> grenslight && getTemp() > grenstemp && (getIn() % 2) == 0)
+		if(getLight()> grenslight && getTemp() > grenstemp && (get_unrollStatus() % 2) == 0)
 		{
 			//sei();
 			uitrollen();
@@ -154,15 +155,15 @@ ISR(TIMER0_COMPA_vect){
 		
 		// Als het onder de grenslight is, en boven de grenstemperatuur is,
 		// en uitgerold is. Dan moet het inrollen.
-		if(getLight()< grenslight && getTemp() < grenstemp && (getIn() % 2) == 1)
+		if(getLight()< grenslight && getTemp() < grenstemp && (get_unrollStatus() % 2) == 1)
 		{
 			//sei();
 			oprollen();
 		}	
 		
-		// Resets de timer en de Totale timer ticks*/
+		// Resets de timer en de Totale timer ticks*//*
 		extraTime = 0;
-	}
+	}*/
 }
 
 

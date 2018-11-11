@@ -6,6 +6,8 @@ ADC.c
 
 Besturingseenheid.c
 
+Instellingen.c
+
 Protocol.c
 
 serial.c

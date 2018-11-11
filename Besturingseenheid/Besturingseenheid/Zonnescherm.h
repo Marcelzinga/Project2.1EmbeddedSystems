@@ -1,4 +1,4 @@
-int getIn();
+int get_unrollStatus();
 void uitrollen();
 void oprollen();
 
