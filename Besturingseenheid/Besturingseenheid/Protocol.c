@@ -76,16 +76,18 @@ void protocolCom(){
 			}
 			else if(strncmp("SET_GRENS_TEMP(Z)", in_buf, 14) == 0){
 				//printf("203 GRENS_TEMP: %6.2f -> %6.2f ", grens_temperatuurRes, in_buf);
-				
-				if(sizeof in_buf> 18){
+				/*
+				if(sizeof in_buf> 20){
+					int temp = sizeof in_buf;
 					printf("504 Ongeldige temperatuur");
-				}
-				else{
+				}*				
+				
+				else{*/
 				ser_write("203 GRENS_TEMP: "), ser_write(get_grensTemp()), ser_write(" -> ");
 				set_substring();
 				set_grensTemp(substring);
 				ser_writeln(get_grensTemp());
-				}
+				//}
 			}				
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/
 			else if(strcmp("GET_LIGHT", in_buf) == 0){
@@ -99,15 +101,15 @@ void protocolCom(){
 			}
 			else if(strncmp("SET_GRENS_LIGHT(Z)", in_buf, 15) == 0){
 				//printf("203 GRENS_LIGHT: %6.2f -> %6.2f ", grens_lichtintRes, in_buf);
-				if(sizeof in_buf> 20){
+				/*if(sizeof in_buf> 20){
 					printf("504 Ongeldige lichtintensiteit");
 				}
-				else{
+				else{*/
 				ser_write("203 GRENS_LIGHT: "), ser_write(get_grensLight()), ser_write(" -> ");
 				set_substring();
 				set_grensLicht(substring);
 				ser_writeln(get_grensLight());
-				}				
+				//}				
 			}
 /*----------------------------------------------------------Afstandsensor---------------------------------------------------------------------*/
 			else if(strcmp("GET_MAX_UNROLL", in_buf) == 0){
@@ -117,15 +119,15 @@ void protocolCom(){
 			else if(strncmp("SET_MAX_UNROLL(Z)", in_buf, 15) == 0){
 				//printf("203 MAX_UNROLL: %6.2f -> %6.2f ", maxUnrollRes, in_buf);
 				
-				if(sizeof in_buf> 19){
+				/*if(sizeof in_buf> 19){
 					printf("504 Ongeldige uitrolwaarde");
 				}
-				else{
+				else{*/
 				ser_write("203 MAX_UNROLL: "), ser_write(get_maxUnroll()), ser_write(" -> ");
 				set_substring();
 				set_maxUnroll(substring);
 				ser_writeln(get_maxUnroll());
-				}
+				//}
 			}				
 			else if(strcmp("GET_MIN_UNROLL", in_buf) == 0){
 				//printf("202 MIN_UNROLL= % 6.2f \n", minUnrollRes);
@@ -135,15 +137,15 @@ void protocolCom(){
 			else if(strncmp("SET_MIN_UNROLL(Z)", in_buf, 15) == 0){
 				//printf("203 MIN_UNROLL: %6.2f -> %6.2f ", minUnrollRes, in_buf);
 				
-				if(sizeof in_buf> 19){
+				/*if(sizeof in_buf> 19){
 					printf("504 Ongeldige inrolwaarde");
 				}
-				else{
+				else{*/
 				ser_write("203 MIN_UNROLL: "), ser_write(get_minUnroll()), ser_write(" -> ");
 				set_substring();
 				set_minUnroll(substring);
 				ser_writeln(get_minUnroll());
-				}				
+				//}				
 			}
 /*----------------------------------------------------------Information---------------------------------------------------------------------*/
 			else if(strcmp("GET_NAME", in_buf) == 0){
@@ -151,14 +153,14 @@ void protocolCom(){
 			}
 				
 			else if(strncmp("SET_NAME(Z)", in_buf, 8) == 0){
-				if(sizeof in_buf> 49){
+				/*if(sizeof in_buf> 49){
 					printf("504 Te lange naam");
 				}
-				else{
+				else{*/
 				set_substring();
 				set_Naam(substring);
 				printf("200 OK \n");
-				}				
+				//}				
 			}
 			
 			else if(strcmp("GET_LOCATION", in_buf) == 0){
@@ -166,15 +168,15 @@ void protocolCom(){
 				ser_write("202 "), ser_writeln(get_Locatie());
 			}
 			else if(strncmp("SET_LOCATION(Z)", in_buf, 12) == 0){
-				if(sizeof in_buf> 53){
+				/*if(sizeof in_buf> 53){
 					printf("504 Te lange naam voor locatie");
 				}
-				else{
+				else{*/
 				set_substring();
 				set_Locatie(substring);
 				
 				printf("200 OK \n");
-				}				
+				//}				
 			}
 			
 				else if(strcmp("GET_VERSION", in_buf) == 0){
@@ -182,15 +184,15 @@ void protocolCom(){
 					ser_write("202 versie: "), ser_writeln(get_Versie());
 				}
 				else if(strncmp("SET_VERSION(Z)", in_buf, 12) == 0){
-					if(sizeof in_buf> 19){
+					/*if(sizeof in_buf> 19){
 						printf("504 Te groot nummer");
 					}
-					else{
+					else{*/
 					set_substring();
 					set_Versie(substring);
 					
 					printf("200 OK \n");
-					}					
+					//}					
 				}
 
 /*****************************************************************Exit**********************************************************************/			
