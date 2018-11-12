@@ -88,7 +88,16 @@ void protocolCom(){
 				set_grensTemp(substring);
 				ser_writeln(get_grensTemp());
 				//}
-			}				
+			}
+		else if(strcmp("GET_ALL", in_buf) == 0)
+		{
+			printf("202 TEMP%6.2f \n", getTemp());
+			printf("203 LIGHT %i \n", getLight());
+			printf("204 AFSTAND % 6.2f cm \n", getDistance());
+			ser_write("205 "),  ser_writeln(get_Naam());
+			ser_write("206 "), ser_writeln(get_Locatie());
+			
+		}				
 /*----------------------------------------------------------Get Lichtintensiteit---------------------------------------------------------------------*/
 			else if(strcmp("GET_LIGHT", in_buf) == 0){
 				printf("202 LIGHT %i \n", getLight());
