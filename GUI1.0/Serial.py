@@ -1,4 +1,4 @@
-import serial, time, glob, sys
+import serial, time, glob, sys, re
 
 HANDSHAKE = "kersthaan"
 version = "1"
@@ -33,18 +33,20 @@ def serial_ports():
             pass
     return result
 
-def readSerial():
+def readSerial(ser):
     # https://python-forum.io/Thread-Writing-commands-to-serial
     return ser.read(ser.inWaiting()).decode('ascii')
 
-#TODO ervoor zorgen dat wanneer je eenmaal gehandshaked hebt, dit niet weer te hoeven doen
-def initialHandshake():
-    response = readSerial()
+# Als het goed is hoeft dit maar 1 keer per port per session te gebeuren
+def initialHandshake(port):
+    ser = serial.Serial(port, 19200, timeout=1)
+    time.sleep(2)  # zodat de onlesbare tekens worden genegeerd
+    response = readSerial(ser)
     print(response)
     if  (response[:3] == "201"):
         ser.write(HANDSHAKE.encode() + bytes([13]))
         time.sleep(1)
-        response = readSerial()
+        response = readSerial(ser)
         if ('504' in response):
             # Exit de while loop en geef aan dat de ID niet matched
             print("ID doesn't match")
@@ -54,33 +56,40 @@ def initialHandshake():
             if ("200" in response):
                 ser.write('GET_NAME'.encode() + bytes([13]))
                 time.sleep(1)
-                response = readSerial()
-                name = response[14:] #TODO het moet de enter detecten en alles na de enter afsnijden
+                response = readSerial(ser)
+                re.sub('')
+                name = response[:] #TODO het moet de enter detecten en alles na de enter afsnijden
                 print("naam", name)
+
                 #print(response)
                 if (len(name) is 0): #TODO ipv dit if name is not in lijst
                     print("onbekend besturingseenheid")
-                    #TODO geef het bordje een temporary name en locatie zodat het terug te vinden is
+                    #TODO stuur set commands voor standaard instellingen
                     #TODO ADD a label in instellingen zodat de user de instellingen kan wijzigen
+                    #main.addbordje()
                 else:
                     print("bekend bordje")
                     ser.write('GET_VERSION'.encode() + bytes([13]))
                     time.sleep(1)
-                    response = readSerial()
+                    response = readSerial(ser)
                     if(version in response):
                         print("Same version, you may continue")
+                        #TODO ook hiet word het bordje geadd.
+                        #main.addbordje
                     else:
                         print("Outdated version")
                         ser.write('Exit'.encode() + bytes([13]))
                     print("Response:", response)
 
-def doTask(task):
-    response = readSerial()
+def doGetTask(task, port):
+    ser = serial.Serial(port, 19200, timeout=1)
+    time.sleep(2)  # zodat de onlesbare tekens worden genegeerd
+    response = readSerial(ser)
     print(response)
     if  (response[:3] == "201"):
         ser.write(HANDSHAKE.encode() + bytes([13]))
         time.sleep(1)
-        response = readSerial()
+        response = readSerial(ser)
         if ('504' in response):
             # Exit de while loop en geef aan dat de ID niet matched
             print("ID doesn't match")
@@ -90,7 +99,7 @@ def doTask(task):
             if ('204' in response):
                 ser.write(task.encode() + bytes([13]))
                 time.sleep(1)
-                response = readSerial()
+                response = readSerial(ser)
                 print(response[:3])
                 if response[:3] == '202':
                     taskvariable = response
@@ -99,16 +108,19 @@ def doTask(task):
                     return taskvariable
 
 
+def doSetTask(task, port):
+    print("1")
 
-for port in serial_ports():
-    if port not in known_ports:
-        ser = serial.Serial(port, 19200, timeout=1)
-        time.sleep(2)
-        initialHandshake()
-        known_ports.append(port)
+def doRollTask(task, port):
+    print("2")
 
+
+def scanPorts():
+    for port in serial_ports():
+            initialHandshake(port)
+            known_ports.append(port)
+
+
+scanPorts()
 print(known_ports)
-
-
-# Delay zodat de vreemde tekens weg zijn
-
+doGetTask("GET_LIGHT", 'COM7')
