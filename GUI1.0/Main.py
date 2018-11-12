@@ -66,9 +66,11 @@ class PerPaneel(tk.Frame):
         f2.grid_anchor('nw')
         self.TempValue = tk.StringVar()
         self.LightValue = tk.StringVar()
+        self.NameValue = tk.StringVar()
+        self.DistanceValue = tk.StringVar()
 
         #  ****************************************************ZONNESCHERM1**************************************************************
-        p1_perL1 = tk.Label(self, text="Zonnescherm 1")
+        p1_perL1 = tk.Label(self, textvariable=self.NameValue)
         p1_perL1.grid(row=0, columnspan=2, column=1, sticky="W")
         p1_perL1.grid_configure(padx=(40, 0), pady=(20, 0))
 
@@ -96,7 +98,7 @@ class PerPaneel(tk.Frame):
         p1_perL7 = tk.Label(self, text="Afstand:")
         p1_perL7.grid(row=5, column=1, sticky="W")
         p1_perL7.grid_configure(padx=(15, 0))
-        p1_perL8 = tk.Label(self, text="1.60(CM)")
+        p1_perL8 = tk.Label(self, textvariable=self.DistanceValue)
         p1_perL8.grid(row=5, column=2, sticky="E")
         p1_perL8.grid_configure(padx=(0, 15))
 
@@ -351,7 +353,7 @@ class PerPaneel(tk.Frame):
         p2_per_L7 = tk.Label(self, text="Afstand:")
         p2_per_L7.grid(row=13, column=5, sticky="W")
         p2_per_L7.grid_configure(padx=(15, 0))
-        p2_per_L8 = tk.Label(self, text="1.60(CM)")
+        p2_per_L8 = tk.Label(self, text="1.60 (CM)")
         p2_per_L8.grid(row=13, column=6, sticky="E")
         p2_per_L8.grid_configure(padx=(0, 15))
 
@@ -425,27 +427,29 @@ class PerPaneel(tk.Frame):
         B3.grid(row=5, pady=2)
         self.after(2000, _thread.start_new_thread, self.GetValues, ())
 
-    def GetValues(self):
+
+    def GetValues(self, Test=None):
 
         while (1):
-            ser.write('GET_TEMP'.encode() + bytes([13]))
-            response = ser.read(ser.inWaiting()).decode('ascii')
-            response = re.sub('GET_TEMP', '', response)
-            response = re.sub('GET_LIGHT', '', response)
-            response = re.sub('Wat kan ik voor u doen', '', response)
-            if len(response) > 0:
-                self.TempValue.set(str(response))
+            if Test == None:
+                ser.write('GET_ALL'.encode() + bytes([13]))
+                response = ser.read(ser.inWaiting()).decode('ascii')
+                response = re.sub('Wat kan ik voor u doen', '', response)
+                response = re.sub('GET_ALL', '', response)
+                response = response[2:-2]
+                self.TempValue.set(str(response[8:14]))
+                response = response[14:]
+                self.LightValue.set(str(response[13:17]))
+                response = response[17:]
+                self.DistanceValue.set(str(response[14:23]))
+                response = response[23:]
                 print(response)
+
+            if Test == "Uirollen":
+                print("Test")
             time.sleep(1)
-            ser.write('GET_LIGHT'.encode() + bytes([13]))
-            response = ser.read(ser.inWaiting()).decode('ascii')
-            response = re.sub('GET_LIGHT', '', response)
-            response = re.sub('GET_TEMP', '', response)
-            response = re.sub('Wat kan ik voor u doen', '', response)
-            if len(response) > 0:
-                self.LightValue.set(str(response))
-                print(response)
-            time.sleep(1)
+
+
 
 
 class AllePanelen(tk.Frame):
