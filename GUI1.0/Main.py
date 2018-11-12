@@ -1,9 +1,12 @@
-import tkinter as tk   # python3
-import serial
+import tkinter as tk  # python3
+import serial, time, re
+import _thread
+
+
 TITLE_FONT = ("Helvetica", 18, "bold")
 
-def test():
-    print("test")
+ser = serial.Serial('COM4', 19200, timeout=1)
+print(ser)
 
 class SampleApp(tk.Tk):
 
@@ -19,7 +22,8 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F,geometry in zip((PerPaneel, AllePanelen, Instellingen, Wijzigen), ('900x700', '1000x700', '1000x700', '800x800')):
+        for F, geometry in zip((PerPaneel, AllePanelen, Instellingen, Wijzigen),
+                               ('900x700', '1000x700', '1000x700', '800x800')):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             # store the frame and the geometry for this frame
@@ -40,7 +44,13 @@ class SampleApp(tk.Tk):
         self.geometry(geometry)
         frame.tkraise()
 
-
+    def show_frame1(self, page_name):
+        '''Show a frame for the given page name'''
+        frame, geometry = self.frames[page_name]
+        # change geometry of the window
+        self.update_idletasks()
+        self.geometry(geometry)
+        frame.tkraise()
 
 class PerPaneel(tk.Frame):
 
@@ -54,6 +64,9 @@ class PerPaneel(tk.Frame):
         f2 = tk.Frame(self)
         f2.grid(row=0, column=0)
         f2.grid_anchor('nw')
+        self.TempValue = tk.StringVar()
+        self.LightValue = tk.StringVar()
+
         #  ****************************************************ZONNESCHERM1**************************************************************
         p1_perL1 = tk.Label(self, text="Zonnescherm 1")
         p1_perL1.grid(row=0, columnspan=2, column=1, sticky="W")
@@ -91,13 +104,13 @@ class PerPaneel(tk.Frame):
         p1_perL9 = tk.Label(self, text="Temperatuur:")
         p1_perL9.grid(row=4, column=3, sticky="W")
         p1_perL9.grid_configure(padx=(15, 0))
-        p1_perL10 = tk.Label(self, text="22.3")
+        p1_perL10 = tk.Label(self, textvariable=self.TempValue)
         p1_perL10.grid(row=4, column=4, sticky="E")
 
-        p1_perL11 = tk.Label(self, text="Afstand:")
+        p1_perL11 = tk.Label(self, text="Lichtintensiteit:")
         p1_perL11.grid(row=5, column=3, sticky="W")
         p1_perL11.grid_configure(padx=(15, 0))
-        p1_perL12 = tk.Label(self, text="0.323")
+        p1_perL12 = tk.Label(self, textvariable=self.LightValue)
         p1_perL12.grid(row=5, column=4, sticky="E")
 
         #  ********************tk.ButtonS*******************
@@ -137,7 +150,6 @@ class PerPaneel(tk.Frame):
         p1_perB7.config(width=26)
         p1_perB7.grid(row=7, column=3, columnspan=2)
         p1_perB7.grid_configure(padx=(15, 0))
-
 
         #  ****************************************************ZONNESCHERM2**************************************************************
         p2_per_L1 = tk.Label(self, text="Zonnescherm 2")
@@ -180,7 +192,6 @@ class PerPaneel(tk.Frame):
         p2_per_L10.grid(row=4, column=8, sticky="E")
         p2_per_L10.grid_configure(padx=(0, 15))
 
-
         p2_per_L11 = tk.Label(self, text="Afstand:")
         p2_per_L11.grid(row=5, column=7, sticky="W")
         p2_per_L11.grid_configure(padx=(15, 0))
@@ -221,7 +232,6 @@ class PerPaneel(tk.Frame):
         p2_per_B6.config(width=12)
         p2_per_B6.grid(row=6, column=8)
         p2_per_B6.grid_configure(padx=(0, 15))
-
 
         p2_per_B7 = tk.Button(self, text="Instellingen")
         p2_per_B7.config(width=26)
@@ -312,8 +322,8 @@ class PerPaneel(tk.Frame):
         p1_perB7.grid(row=15, column=3, columnspan=2)
         p1_perB7.grid_configure(padx=(15, 0))
 
-        #  ****************************************************ZONNESCHERM2**************************************************************
-        p2_per_L1 = tk.Label(self, text="Zonnescherm 2")
+        #  ****************************************************ZONNESCHERM4**************************************************************
+        p2_per_L1 = tk.Label(self, text="Zonnescherm 4")
         p2_per_L1.grid(row=8, columnspan=2, column=5, sticky="W")
         p2_per_L1.grid_configure(padx=(40, 0), pady=(20,))
 
@@ -400,19 +410,43 @@ class PerPaneel(tk.Frame):
         p2_per_B7.grid_configure(padx=(15, 15))
         #  ********************BUTTON WINDOWS*******************
         B = tk.Button(self, text="Per Paneel",
-                           command=lambda: controller.show_frame("PerPaneel"))
+                      command=lambda: controller.show_frame("PerPaneel"))
         B.config(width=10)
         B.grid(row=3, pady=2)
 
         B1 = tk.Button(self, text="Alle Panelen",
-                           command=lambda: controller.show_frame("AllePanelen"))
+                       command=lambda: controller.show_frame("AllePanelen"))
         B1.config(width=10)
         B1.grid(row=4, pady=2)
 
         B3 = tk.Button(self, text="Instellingen",
-                           command=lambda: controller.show_frame("Instellingen"))
+                       command=lambda: controller.show_frame("Instellingen"))
         B3.config(width=10)
         B3.grid(row=5, pady=2)
+        self.after(2000, _thread.start_new_thread, self.GetValues, ())
+
+    def GetValues(self):
+
+        while (1):
+            ser.write('GET_TEMP'.encode() + bytes([13]))
+            response = ser.read(ser.inWaiting()).decode('ascii')
+            response = re.sub('GET_TEMP', '', response)
+            response = re.sub('GET_LIGHT', '', response)
+            response = re.sub('Wat kan ik voor u doen', '', response)
+            if len(response) > 0:
+                self.TempValue.set(str(response))
+                print(response)
+            time.sleep(1)
+            ser.write('GET_LIGHT'.encode() + bytes([13]))
+            response = ser.read(ser.inWaiting()).decode('ascii')
+            response = re.sub('GET_LIGHT', '', response)
+            response = re.sub('GET_TEMP', '', response)
+            response = re.sub('Wat kan ik voor u doen', '', response)
+            if len(response) > 0:
+                self.LightValue.set(str(response))
+                print(response)
+            time.sleep(1)
+
 
 class AllePanelen(tk.Frame):
 
@@ -527,17 +561,17 @@ class AllePanelen(tk.Frame):
         alle_B7.grid_configure(padx=(15, 0))
 
         B1 = tk.Button(f2, text="Per Paneel",
-                           command=lambda: controller.show_frame("PerPaneel"))
+                       command=lambda: controller.show_frame("PerPaneel"))
         B1.config(width=10)
         B1.grid(pady=2)
 
         B = tk.Button(f2, text="Alle Panelen",
-                           command=lambda: controller.show_frame("AllePanelen"))
+                      command=lambda: controller.show_frame("AllePanelen"))
         B.config(width=10)
         B.grid(pady=2)
 
         B3 = tk.Button(f2, text="Instellingen",
-                           command=lambda: controller.show_frame("Instellingen"))
+                       command=lambda: controller.show_frame("Instellingen"))
         B3.config(width=10)
         B3.grid(pady=2)
 
@@ -548,13 +582,15 @@ class Instellingen(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
+        "self.after(2000, _thread.start_new_thread, self.GetTemp, ())"
+
+        self.TempValue = tk.StringVar()
         f1 = tk.Frame(self)
         f1.grid(row=0, column=1)
         f2 = tk.Frame(self)
         f2.grid(row=0, column=0)
-
-        var = tk.StringVar()
         var1 = tk.StringVar()
+        var = tk.StringVar()
 
         inst_L1 = tk.Label(f1, text="Instellingen")
         inst_L1.grid(row=0, column=1, columnspan=2, sticky="W")
@@ -570,7 +606,7 @@ class Instellingen(tk.Frame):
         inst_L2.grid(row=2, column=1, columnspan=2, sticky="W")
         inst_L2.grid_configure(padx=(15, 0), pady=(25, 5))
 
-        inst_M2 = tk.Message(f1, textvariable=var1)
+        inst_M2 = tk.Message(f1, textvariable=self.TempValue)
         inst_M2.grid(row=3, column=1, columnspan=2, sticky="W")
         inst_M2.grid_configure(padx=(15, 0))
         inst_M2.config(width=300)
@@ -634,7 +670,7 @@ class Instellingen(tk.Frame):
         inst_L14.grid(row=5, column=3, columnspan=2, sticky="W")
         inst_L14.config(width=42)
 
-        inst_B1 = tk.Button(f1, text="Wijzigen", command=lambda: controller.show_frame("Wijzigen"))
+        inst_B1 = tk.Button(f1, text="Wijzigen", command=lambda: controller.show_frame1("Wijzigen"))
         inst_B1.grid(row=6, column=3, sticky="W")
         inst_B1.config(width=20)
 
@@ -666,21 +702,21 @@ class Instellingen(tk.Frame):
         inst_B8.grid(row=9, column=4, sticky="W")
         inst_B8.config(width=20)
 
-        B1 = tk.Button(f2, text="Per Paneel",
-                           command=lambda: controller.show_frame("PerPaneel"))
+        B = tk.Button(self, text="Per Paneel",
+                      command=lambda: controller.show_frame("PerPaneel"))
+        B.config(width=10)
+        B.grid(row=3, pady=2)
+
+        B1 = tk.Button(self, text="Alle Panelen",
+                       command=lambda: controller.show_frame("AllePanelen"))
         B1.config(width=10)
-        B1.grid(pady=2)
+        B1.grid(row=4, pady=2)
 
-        B2 = tk.Button(f2, text="Alle Panelen",
-                           command=lambda: controller.show_frame("AllePanelen"))
-        B2.config(width=10)
-        B2.grid(pady=2)
-
-
-        B3 = tk.Button(f2, text="Instellingen",
-                           command=lambda: controller.show_frame("Instellingen"))
+        B3 = tk.Button(self, text="Instellingen",
+                       command=lambda: controller.show_frame("Instellingen"))
         B3.config(width=10)
-        B3.grid(pady=2)
+        B3.grid(row=5, pady=2)
+
 
 class Wijzigen(tk.Frame):
     def __init__(self, parent, controller):
@@ -691,90 +727,88 @@ class Wijzigen(tk.Frame):
         f1.grid(row=0, column=1)
         f2 = tk.Frame(self)
         f2.grid(row=0, column=0)
-
-        #*************************************ZONNESCHERM_1**************************************************
+        # *************************************ZONNESCHERM_1**************************************************
 
         wijz_L1 = tk.Label(f1, text="Naam")
-        wijz_L1.grid(row=1, column=1, columnspan=2, sticky="W")
+        wijz_L1.grid(row=1, column=1, columnspan=2, sticky="E")
         wijz_L1.grid_configure(padx=(15, 0))
         wijz_E1 = tk.Entry(f1)
+        wijz_E1.insert(0, "a default value")
         wijz_E1.grid(row=1, column=3, sticky="E")
 
         wijz_L2 = tk.Label(f1, text="Locatie")
-        wijz_L2.grid(row=2, column=1, columnspan=2, sticky="W")
+        wijz_L2.grid(row=2, column=1, columnspan=2, sticky="E")
         wijz_L2.grid_configure(padx=(15, 0))
         wijz_E2 = tk.Entry(f1)
         wijz_E2.grid(row=2, column=3, sticky="W")
 
         wijz_L3 = tk.Label(f1, text="Maximale uitrol")
-        wijz_L3.grid(row=3, column=1, columnspan=2, sticky="W")
+        wijz_L3.grid(row=3, column=1, columnspan=2, sticky="E")
         wijz_L3.grid_configure(padx=(15, 0))
         wijz_E3 = tk.Entry(f1)
         wijz_E3.grid(row=3, column=3, sticky="W")
 
         wijz_L4 = tk.Label(f1, text="Maximale inrol")
-        wijz_L4.grid(row=4, column=1, columnspan=2, sticky="W")
+        wijz_L4.grid(row=4, column=1, columnspan=2, sticky="E")
         wijz_L4.grid_configure(padx=(15, 0))
         wijz_E4 = tk.Entry(f1)
         wijz_E4.grid(row=4, column=3, sticky="W")
 
-        wijz_L5 = tk.Label(f1, text="Maximale lichtintensiteit")
+        wijz_L5 = tk.Label(f1, text="Grenswaarde lichtintensiteit")
         wijz_L5.grid(row=5, column=1, columnspan=2, sticky="W")
         wijz_L5.grid_configure(padx=(15, 0))
         wijz_E5 = tk.Entry(f1)
         wijz_E5.grid(row=5, column=3, sticky="W")
 
-        wijz_L6 = tk.Label(f1, text="Minimale lichtintensiteit")
+        wijz_L6 = tk.Label(f1, text="Grenswaarde Temperatuur")
         wijz_L6.grid(row=6, column=1, columnspan=2, sticky="W")
         wijz_L6.grid_configure(padx=(15, 0))
         wijz_E6 = tk.Entry(f1)
         wijz_E6.grid(row=6, column=3, sticky="W")
 
-        wijz_L7 = tk.Label(f1, text="Maximale temperatuur")
-        wijz_L7.grid(row=7, column=1, columnspan=2, sticky="W")
-        wijz_L7.grid_configure(padx=(15, 0))
-        wijz_E7 = tk.Entry(f1)
-        wijz_E7.grid(row=7, column=3, sticky="W")
-
-        wijz_L8 = tk.Label(f1, text="Minimale temperatuur")
-        wijz_L8.grid(row=8, column=1, columnspan=2, sticky="W")
-        wijz_L8.grid_configure(padx=(15, 0))
-        wijz_E8 = tk.Entry(f1, )
-        wijz_E8.grid(row=8, column=3, sticky="W")
-
         I1_wijz_L1 = tk.Label(f1, text="Naam")
         I1_wijz_L1.grid(row=1, column=4, columnspan=2, sticky="E")
         I1_wijz_L1.grid_configure(padx=(15, 0))
+        I2_wijz_L1 = tk.Label(f1, text="Franklin")
+        I2_wijz_L1.grid(row=1, column=6, columnspan=2, sticky="W")
+        I2_wijz_L1.grid_configure(padx=(15, 0))
 
         I1_wijz_L2 = tk.Label(f1, text="Locatie")
         I1_wijz_L2.grid(row=2, column=4, columnspan=2, sticky="E")
         I1_wijz_L2.grid_configure(padx=(15, 0))
+        I2_wijz_L2 = tk.Label(f1, text="Zernikeplein")
+        I2_wijz_L2.grid(row=2, column=6, columnspan=2, sticky="W")
+        I2_wijz_L2.grid_configure(padx=(15, 0))
 
         I1_wijz_L3 = tk.Label(f1, text="Maximale uitrol")
         I1_wijz_L3.grid(row=3, column=4, columnspan=2, sticky="E")
         I1_wijz_L3.grid_configure(padx=(15, 0))
+        I2_wijz_L3 = tk.Label(f1, text="30(CM)")
+        I2_wijz_L3.grid(row=3, column=6, columnspan=2, sticky="W")
+        I2_wijz_L3.grid_configure(padx=(15, 0))
 
         I1_wijz_L4 = tk.Label(f1, text="Maximale inrol")
         I1_wijz_L4.grid(row=4, column=4, columnspan=2, sticky="E")
         I1_wijz_L4.grid_configure(padx=(15, 0))
+        I2_wijz_L4 = tk.Label(f1, text="6(CM)")
+        I2_wijz_L4.grid(row=4, column=6, columnspan=2, sticky="W")
+        I2_wijz_L4.grid_configure(padx=(15, 0))
 
-        I1_wijz_L5 = tk.Label(f1, text="Maximale lichtintensiteit")
+        I1_wijz_L5 = tk.Label(f1, text="Grenswaarde lichtinsiteit")
         I1_wijz_L5.grid(row=5, column=4, columnspan=2, sticky="E")
         I1_wijz_L5.grid_configure(padx=(15, 0))
+        I2_wijz_L5 = tk.Label(f1, text="230")
+        I2_wijz_L5.grid(row=5, column=6, columnspan=2, sticky="W")
+        I2_wijz_L5.grid_configure(padx=(15, 0))
 
-        I1_wijz_L6 = tk.Label(f1, text="Minimale lichtintensiteit")
+        I1_wijz_L6 = tk.Label(f1, text="Grenswaarde temperatuur")
         I1_wijz_L6.grid(row=6, column=4, columnspan=2, sticky="E")
         I1_wijz_L6.grid_configure(padx=(15, 0))
+        I2_wijz_L6 = tk.Label(f1, text="22.56")
+        I2_wijz_L6.grid(row=6, column=6, columnspan=2, sticky="W")
+        I2_wijz_L6.grid_configure(padx=(15, 0))
 
-        I1_wijz_L7 = tk.Label(f1, text="Maximale temperatuur")
-        I1_wijz_L7.grid(row=7, column=4, columnspan=2, sticky="E")
-        I1_wijz_L7.grid_configure(padx=(15, 0))
-
-        I1_wijz_L8 = tk.Label(f1, text="Minimale temperatuur")
-        I1_wijz_L8.grid(row=8, column=4, columnspan=2, sticky="E")
-        I1_wijz_L8.grid_configure(padx=(15, 0))
-
-        #********************************************BUTTONS*********************************************
+        # ********************************************BUTTONS*********************************************
         wijz_B1 = tk.Button(f1, text="Opslaan")
         wijz_B1.grid(row=33, column=1, sticky="W")
         wijz_B1.grid_configure(padx=(15, 0), pady=(10, 0))
@@ -783,22 +817,22 @@ class Wijzigen(tk.Frame):
         wijz_B2.grid(row=33, column=3, sticky="W")
         wijz_B2.grid_configure(pady=(10, 0))
 
-        B1 = tk.Button(f2, text="Per Paneel",
-                           command=lambda: controller.show_frame("PerPaneel"))
+        B = tk.Button(self, text="Per Paneel",
+                      command=lambda: controller.show_frame("PerPaneel"))
+        B.config(width=10)
+        B.grid(row=3, pady=2)
+
+        B1 = tk.Button(self, text="Alle Panelen",
+                       command=lambda: controller.show_frame("AllePanelen"))
         B1.config(width=10)
-        B1.grid(pady=2)
+        B1.grid(row=4, pady=2)
 
-        B3 = tk.Button(f2, text="Alle Panelen",
-                           command=lambda: controller.show_frame("AllePanelen"))
+        B3 = tk.Button(self, text="Instellingen",
+                       command=lambda: controller.show_frame("Instellingen"))
         B3.config(width=10)
-        B3.grid(pady=2)
+        B3.grid(row=5, pady=2)
 
-        B3 = tk.Button(f2, text="Instellingen",
-                           command=lambda: controller.show_frame("Instellingen"))
-        B3.config(width=10)
-        B3.grid(pady=2)
 
 if __name__ == "__main__":
     app = SampleApp()
     app.mainloop()
-
