@@ -21,7 +21,6 @@ char* get_Naam();
 char* get_Locatie();
 char* get_Versie();
 
-
 char in_buf[30]; // Invoerbuffer
 
 char *substring;
@@ -29,6 +28,11 @@ char *temporaryget;
 
 char HANDSHAKE[10] = {'k', 'e', 'r', 's', 't', 'h', 'a', 'a', 'n', '\0'};
 
+int AUT = 0;
+
+int get_automatishStatus(){
+	return AUT;
+}
 // De handshakeprocedure is niet compleet. Wanneer 
 void protocolCom(){
 	/*ser_write("201 Please enter ID");
@@ -65,6 +69,18 @@ void protocolCom(){
 			if (strcmp("STATUS", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
 				printf("202 Status: %i", get_unrollStatus());
 			}
+			
+			if (strcmp("TOGGLEAUT", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
+
+			if ((get_automatishStatus()%2)==1){
+				printf("202 AUT UIT \n");
+			}
+			else{
+				printf("202 AUT AAN \n");
+			}	
+			AUT = AUT + 1;	
+		}
+			
 /*--------------------------------------------------------Get Temperatuur -----------------------------------------------------------------*/
 			else if(strcmp("GET_TEMP", in_buf) == 0){
 				printf("202 TEMP= % 6.2f \n", getTemp());
@@ -221,6 +237,7 @@ void protocolCom(){
 				"UNROLL\t\tLaat het zonnescherm uitrollen\n\r"
 				"ROLLUP\t\tLaat het zonnescherm oprollen\n\n\r"
 				"STATUS"
+				"TOGGLEAUT"
 				"--------------------Sensors---------------------\n\r"
 				"GET_TEMP\t\tGeeft temperatuur van dat moment terug\n\n\r"
 				"GET_GRENS_TEMP"

@@ -44,6 +44,8 @@ volatile int extraTime1 = 0;
 volatile int timerVariable = 0;
 
 
+
+
 void init_ports(void){
 	DDRD = 0b11110111; //set PORTD4 as INPUT
 	DDRB = 0xFF; //set PORTB as output
@@ -124,7 +126,6 @@ Timerinterrupt geeft om de 5* seconden een interrupt
 https://eleccelerator.com/avr-timer-calculator/
 */
 ISR(TIMER0_COMPA_vect){
-	//sei();
 	
 	extraTime1++;
 	if(extraTime1>100){
@@ -132,7 +133,8 @@ ISR(TIMER0_COMPA_vect){
 		extraTime1 = 0;
 	}
 	extraTime++;
-	/*
+	
+	if((get_automatishStatus() % 2)==1){
 	if(extraTime>3000){
 		char* l = get_grensLight();
 		double grenslight;
@@ -149,7 +151,6 @@ ISR(TIMER0_COMPA_vect){
 		
 		if(getLight()> grenslight && getTemp() > grenstemp && (get_unrollStatus() % 2) == 0)
 		{
-			//sei();
 			uitrollen();
 		}
 		
@@ -157,13 +158,13 @@ ISR(TIMER0_COMPA_vect){
 		// en uitgerold is. Dan moet het inrollen.
 		if(getLight()< grenslight && getTemp() < grenstemp && (get_unrollStatus() % 2) == 1)
 		{
-			//sei();
 			oprollen();
 		}	
 		
 		// Resets de timer en de Totale timer ticks*//*
 		extraTime = 0;
-	}*/
+	}
+	}	
 }
 
 

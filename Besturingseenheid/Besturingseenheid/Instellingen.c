@@ -1,3 +1,4 @@
+#include <avr/eeprom.h>
 int teller;
 
 //Hoevaak de "for-loop" uitgevoerd wordt.
@@ -12,14 +13,13 @@ int grensTellermaxUnroll = 4;
 
 //Start locaties van de variabelen in de EEPROM register.
 int locNaam = 0;
-int locLocatie = 40;
-int locVersie = 80;
-int locTemp = 88;
-int locLicht = 91;
-int locminUnroll = 95;
-int locmaxUnroll = 99;
+int locLocatie = 50;
+int locVersie = 90;
+int locTemp = 106;
+int locLicht = 119;
+int locminUnroll = 133;
+int locmaxUnroll = 146;
 
-#include <avr/eeprom.h>
 //Breedte van de string instellen.
 char naam[40];
 char naamRes[40];

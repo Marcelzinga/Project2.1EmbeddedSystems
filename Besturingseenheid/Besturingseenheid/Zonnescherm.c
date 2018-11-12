@@ -8,13 +8,14 @@
 
 #define DELAY_MS 1000
 
-int j, IN = 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
+int j, IN= 0; //Voor knipperen van zonnescherm | Voor het kijken of hij uitgerold/opgerold is
 
 
 
 int get_unrollStatus(){
 	return IN;
 }
+
 
 
 void init_scherm_ports(){
@@ -58,7 +59,7 @@ void uitrollen(){
 		//printf("% 6.2f", x);
 			
 			
-			/*
+		/*
 		// Laat pin 4 knippen (gele lampje)
 		PORTB = _BV(PORTB4);
 		if(get_timerVariable()% 2 == 0){
