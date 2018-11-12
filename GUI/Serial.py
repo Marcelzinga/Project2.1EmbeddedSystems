@@ -16,16 +16,15 @@ while(1):
         ser.write(HANDSHAKE.encode() + bytes([13]))
         time.sleep(1)
 
+    if ('504' in response):
+        # Exit de while loop en geef aan dat de ID niet matched
+        print("ID doesn't match")
 
 
     # Bij de handshake moet het ook het geheime woord teruggeven
-    if ('201' and 'groeneotter' in response):
-        ser.write(version.encode() + bytes([13]))
-        time.sleep(1)
+    elif ('201' and 'groeneotter' in response):
+        print("Handshake bevestigd")
 
-    elif('504' in response):
-    #Exit de while loop en geef aan dat de ID niet matched
-        print("ID does'nt match")
 
 
     # voer command uit

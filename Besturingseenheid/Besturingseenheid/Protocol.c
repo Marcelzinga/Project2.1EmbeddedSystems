@@ -40,15 +40,7 @@ void protocolCom(){
 	}
 	else{
 		// groeneotter is het antwoord op de handshake
-		printf("201 groeneotter Please enter version");
-		ser_readln(in_buf, sizeof(in_buf), 1);
-		char* c = get_Versie();
-		double x;
-		x = strtod(c, NULL);
-		if(strcmp(get_Versie(), in_buf)){
-			ser_writeln("504 Wrong version");
-		}
-		else{
+		
 			ser_writeln("200");
 			while (1) {
 				ser_write("Wat kan ik voor u doen? ");
@@ -245,7 +237,6 @@ void protocolCom(){
 			}		
 			}
 			}
-			}	
 			}					
 			
 
