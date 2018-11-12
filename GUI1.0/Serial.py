@@ -1,16 +1,41 @@
-#https://python-forum.io/Thread-Writing-commands-to-serial
-import serial, time
+import serial, time, glob, sys
+
 HANDSHAKE = "kersthaan"
 version = "1"
+known_ports = []
 
-ser = serial.Serial('COM7', 19200, timeout=1)
-print(ser)
-# Delay zodat de vreemde tekens weg zijn
-time.sleep(5)
+#https://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
+def serial_ports():
+    """ Lists serial port names
+
+        :raises EnvironmentError:
+            On unsupported or unknown platforms
+        :returns:
+            A list of the serial ports available on the system
+    """
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
+
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
 
 def readSerial():
+    # https://python-forum.io/Thread-Writing-commands-to-serial
     return ser.read(ser.inWaiting()).decode('ascii')
-
 
 #TODO ervoor zorgen dat wanneer je eenmaal gehandshaked hebt, dit niet weer te hoeven doen
 def initialHandshake():
@@ -48,14 +73,6 @@ def initialHandshake():
                         print("Outdated version")
                         ser.write('Exit'.encode() + bytes([13]))
                     print("Response:", response)
-                    # TODO voer command uit ....
-                    # ser.write(opdracht.encode() + bytes([13]))
-                    # if setopdracht
-                    # elif getopdracht
-                    # elif rolopdracht
-                    # testen
-                    #while(1):
-                    # TODO in plaats van GET_LIGHT, voer opdracht uit
 
 def doTask(task):
     response = readSerial()
@@ -82,10 +99,16 @@ def doTask(task):
                     return taskvariable
 
 
-task = "GET_LIGHT"
-variable = doTask(task)
+
+for port in serial_ports():
+    if port not in known_ports:
+        ser = serial.Serial(port, 19200, timeout=1)
+        time.sleep(2)
+        initialHandshake()
+        known_ports.append(port)
+
+print(known_ports)
 
 
-
-
+# Delay zodat de vreemde tekens weg zijn
 
