@@ -40,11 +40,11 @@ void protocolCom(){
 	}
 	else{
 		// groeneotter is het antwoord op de handshake
-		
-			ser_writeln("200");
-			while (1) {
-				ser_write("Wat kan ik voor u doen? ");
-				ser_readln(in_buf, sizeof(in_buf), 1);
+		printf("201 groeneotter \n");
+		ser_writeln("200 Handshake bevestigt");
+		while (1) {
+			ser_write("204 Wat kan ik voor u doen? ");
+			ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
 				if ((get_unrollStatus() % 2) == 1){
