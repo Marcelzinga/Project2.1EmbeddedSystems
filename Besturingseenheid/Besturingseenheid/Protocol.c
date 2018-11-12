@@ -31,7 +31,7 @@ char HANDSHAKE[10] = {'k', 'e', 'r', 's', 't', 'h', 'a', 'a', 'n', '\0'};
 
 // De handshakeprocedure is niet compleet. Wanneer 
 void protocolCom(){
-	ser_write("201 Please enter ID");
+	/*ser_write("201 Please enter ID");
 	ser_readln(in_buf, sizeof(in_buf), 1);
 	int ret;
 	ret = strcmp(HANDSHAKE, in_buf);
@@ -41,9 +41,9 @@ void protocolCom(){
 	else{
 		// groeneotter is het antwoord op de handshake
 		printf("201 groeneotter \n");
-		ser_writeln("200 Handshake bevestigt");
+		ser_writeln("200 Handshake bevestigt");*/
 		while (1) {
-			ser_write("204 Wat kan ik voor u doen? ");
+			ser_write("204 Wat kan ik voor u doen");
 			ser_readln(in_buf, sizeof(in_buf), 1);
 /**********************************************************Zonnescherm uitrollen************************************************************/
 			if (strcmp("UNROLL", in_buf) == 0){ //Wanneer uitrollen wordt gerequest
@@ -248,7 +248,7 @@ void protocolCom(){
 			}		
 			}
 			}
-			}					
+			//}					
 			
 
 //_______________________________________________________________________________________________//
