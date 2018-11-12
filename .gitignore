@@ -1,13 +1,4 @@
 #Atmel Studio
-.eep
-.d
-.elf
-.lss
-.map
-.o
-.srec
-.mk
-.o
 
 #Python
 *.iml
