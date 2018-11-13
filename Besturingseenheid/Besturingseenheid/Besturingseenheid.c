@@ -143,8 +143,7 @@ ISR(TIMER0_COMPA_vect){
 		char* t = get_grensTemp();
 		double grenstemp;
 		grenstemp = strtod(t, NULL);
-		printf("% 6.2f, % 6.2f", grenstemp, getTemp());
-		printf("% 6.2f, %i", grenslight, getLight());
+		
 
 		// Als het boven de grenslight is, en boven de grenstemperatuur is,
 		// en ingerold dan moet het uitrollen
