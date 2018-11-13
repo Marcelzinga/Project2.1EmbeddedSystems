@@ -108,8 +108,12 @@ void protocolCom(){
 		else if(strcmp("GET_ALL", in_buf) == 0)
 		{
 			printf("202 TEMP%6.2f \n", getTemp());
-			printf("203 LIGHT %i \n", getLight());
-			printf("204 AFSTAND % 6.2f cm \n", getDistance());
+			printf("202 LIGHT %i \n", getLight());
+			printf("204 AFSTAND%6.2fcm \n", getDistance());
+			ser_write("205 MAX_UNROLL "), ser_writeln(get_maxUnroll());
+			ser_write("206 MIN_UNROLL "), ser_writeln(get_minUnroll());
+			ser_write("207 GRENS_LIGHT " ), ser_writeln(get_grensLight());
+			ser_write("208 GRENS_TEMP " ), ser_writeln(get_grensTemp());
 			ser_write("205 "),  ser_writeln(get_Naam());
 			ser_write("206 "), ser_writeln(get_Locatie());
 			
